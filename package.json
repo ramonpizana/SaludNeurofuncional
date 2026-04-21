@@ -1,0 +1,10 @@
+{
+  "name": "salud-neurofuncional",
+  "private": true,
+  "scripts": {
+    "validate": "node scripts/validate-repo.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
