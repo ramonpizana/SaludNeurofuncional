@@ -2,6 +2,9 @@
   "name": "salud-neurofuncional",
   "private": true,
   "scripts": {
+    "build": "node scripts/build-static.mjs",
+    "deploy:cloudflare": "node scripts/build-static.mjs && npx wrangler pages deploy dist",
+    "preview:cloudflare": "node scripts/build-static.mjs && npx wrangler pages dev",
     "validate": "node scripts/validate-repo.mjs"
   },
   "engines": {

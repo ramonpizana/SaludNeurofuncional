@@ -22,10 +22,10 @@
 
   <header class="site-header">
     <a class="brand" href="#inicio">
-      <span class="brand-mark">SN</span>
+      <span class="brand-mark" id="brand-mark">SN</span>
       <span>
-        <strong>Salud Neurofuncional</strong>
-        <small>Fisioterapia personalizada</small>
+        <strong id="brand-name">Salud Neurofuncional</strong>
+        <small id="brand-tagline">Fisioterapia personalizada</small>
       </span>
     </a>
 
@@ -36,7 +36,7 @@
       <a href="#agenda">Agenda</a>
     </nav>
 
-    <a class="button button-secondary header-button" href="#agenda">Agendar valoración</a>
+    <a class="button button-secondary header-button" id="header-cta" href="#agenda">Agendar valoración</a>
   </header>
 
   <main>
@@ -50,7 +50,7 @@
         </p>
 
         <div class="hero-actions">
-          <a class="button button-primary" href="#agenda">Reservar una cita</a>
+          <a class="button button-primary" id="primary-cta" href="#agenda">Reservar una cita</a>
           <a class="button button-ghost" href="#servicios">Conocer servicios</a>
         </div>
 
@@ -209,7 +209,7 @@
       <div class="section-heading">
         <p class="eyebrow">Agenda</p>
         <h2>Permite reservar una cita y llevarla directamente al calendario.</h2>
-        <p>
+        <p id="booking-section-copy">
           Esta versión abre el evento listo para guardarse en Google Calendar y también genera un respaldo `.ics`. Si
           luego quieres sincronización directa con el calendario real del profesional, podemos integrar Google Calendar API
           o una plataforma de reservas.
@@ -217,6 +217,23 @@
       </div>
 
       <div class="booking-layout">
+        <article class="external-booking-panel" id="external-booking-panel" hidden>
+          <p class="sidebar-kicker">Agenda en línea</p>
+          <h3 id="external-booking-title">Reserva en una agenda externa sincronizada</h3>
+          <p id="external-booking-description">
+            Cuando conectes Cal.com o Calendly, esta sección abrirá la agenda oficial con horarios bloqueados en tiempo
+            real.
+          </p>
+          <div class="scheduler-actions">
+            <a class="button button-primary" id="external-booking-link" href="#" target="_blank" rel="noopener">
+              Abrir agenda online
+            </a>
+            <a class="button button-secondary" id="whatsapp-link-external" href="#" target="_blank" rel="noopener" hidden>
+              Escribir por WhatsApp
+            </a>
+          </div>
+        </article>
+
         <form class="booking-form" id="appointment-form">
           <div class="form-grid">
             <label>
@@ -267,7 +284,9 @@
             </label>
           </div>
 
-          <button type="submit" class="button button-primary button-block">Crear cita en Google Calendar</button>
+          <button type="submit" class="button button-primary button-block">
+            <span id="booking-submit-label">Crear cita en Google Calendar</span>
+          </button>
           <p class="form-note">
             Después de enviar, se abrirá una nueva pestaña con el evento listo para confirmarse en Google Calendar.
           </p>
@@ -285,7 +304,10 @@
           <article class="sidebar-card">
             <p class="sidebar-kicker">Atención</p>
             <h3>Presencial y seguimiento online</h3>
-            <p>Se puede adaptar el texto para consultorio, visitas a domicilio o consulta virtual.</p>
+            <p id="booking-location-label">Se puede adaptar el texto para consultorio, visitas a domicilio o consulta virtual.</p>
+            <a class="button button-secondary button-block" id="whatsapp-link-sidebar" href="#" target="_blank" rel="noopener" hidden>
+              Contactar por WhatsApp
+            </a>
           </article>
 
           <article class="sidebar-card confirmation-card" id="confirmation-card" hidden>
@@ -300,10 +322,11 @@
   </main>
 
   <footer class="site-footer">
-    <p>Salud Neurofuncional</p>
+    <p id="footer-brand-name">Salud Neurofuncional</p>
     <p>Landing base editable para fisioterapia, rehabilitación y agendado de citas.</p>
   </footer>
 
+  <script src="site-config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

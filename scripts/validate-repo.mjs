@@ -7,11 +7,16 @@ const errors = [];
 const warnings = [];
 
 const requiredFiles = [
+  "_headers",
   "index.html",
   "styles.css",
   "script.js",
   "README.md",
-  "package.json"
+  "package.json",
+  "site-config.js",
+  "wrangler.jsonc",
+  "scripts/build-static.mjs",
+  "functions/api/health.ts"
 ];
 
 const textExtensions = new Set([
@@ -89,7 +94,7 @@ function walk(directory) {
   const entries = readdirSync(directory, { withFileTypes: true });
 
   for (const entry of entries) {
-    if (entry.name === ".git") {
+    if (entry.name === ".git" || entry.name === "dist" || entry.name === "node_modules") {
       continue;
     }
 
@@ -139,7 +144,8 @@ function validateHtml() {
     { label: "main landmark", regex: /<main>/i },
     { label: "booking form", regex: /<form[^>]*id="appointment-form"/i },
     { label: "stylesheet reference", regex: /href="styles\.css"/i },
-    { label: "script reference", regex: /src="script\.js"/i }
+    { label: "script reference", regex: /src="script\.js"/i },
+    { label: "site config reference", regex: /src="site-config\.js"/i }
   ];
 
   for (const check of requiredPatterns) {
@@ -159,6 +165,35 @@ function validateCss() {
 
   if (!css.includes("@media")) {
     addError("CSS validation failed: expected at least one responsive media query.");
+  }
+}
+
+function validateBuildOutput() {
+  const buildScriptPath = path.join(rootDir, "scripts", "build-static.mjs");
+
+  try {
+    execFileSync(process.execPath, [buildScriptPath], {
+      cwd: rootDir,
+      stdio: "pipe"
+    });
+  } catch (error) {
+    const output = error.stderr?.toString().trim() || error.message;
+    addError(`Static build failed:\n${output}`);
+    return;
+  }
+
+  const distFiles = [
+    "dist/index.html",
+    "dist/styles.css",
+    "dist/script.js",
+    "dist/site-config.js",
+    "dist/_headers"
+  ];
+
+  for (const file of distFiles) {
+    if (!existsSync(path.join(rootDir, file))) {
+      addError(`Missing build output file: ${file}`);
+    }
   }
 }
 
@@ -221,6 +256,7 @@ if (errors.length === 0) {
   validateHtml();
   validateCss();
   validateJavaScript();
+  validateBuildOutput();
   validateGitTrackedFiles();
   validateFileSizes();
   walk(rootDir);
