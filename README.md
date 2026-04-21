@@ -16,6 +16,8 @@ Landing page base para una fisioterapeuta o terapeuta fisica con:
 - `site-config.js`
 - `wrangler.jsonc`
 - `DEPLOYMENT.md`
+- `ARCHITECTURE.md`
+- `CONFIGURATION.md`
 - `functions/api/webhooks/calcom.js`
 - `functions/api/webhooks/twilio/inbound.js`
 
@@ -37,6 +39,20 @@ Modos de agenda soportados:
 - `form`: deja el formulario actual y genera evento de Google Calendar en el navegador
 - `external`: oculta el formulario y abre una agenda externa como Cal.com o Calendly
 
+## Arquitectura
+
+La base del proyecto ya quedo dividida por responsabilidades:
+
+- frontend modular en `app/`
+- estilos por capas en `styles/`
+- edge functions en `functions/`
+- utilidades seguras para webhooks en `server/`
+
+Referencia rapida:
+
+- [ARCHITECTURE.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/ARCHITECTURE.md)
+- [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md)
+
 ## Build para Cloudflare Pages
 
 Genera la carpeta lista para desplegar:
@@ -52,6 +68,8 @@ Salida:
 - `dist/script.js`
 - `dist/site-config.js`
 - `dist/_headers`
+- `dist/app/*`
+- `dist/styles/*`
 
 ## Publicacion
 
@@ -113,6 +131,7 @@ Puntos importantes:
 - En Cal.com el evento debe pedir telefono del paciente. Sin telefono, el webhook se omite para no enviar a un destino incorrecto.
 - Las confirmaciones salientes de WhatsApp usan plantillas aprobadas de Twilio Content Template Builder.
 - Las respuestas entrantes se contestan con TwiML, sin exponer credenciales en el cliente.
+- La guia paso a paso de donde encontrar cada valor esta en [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md).
 
 ## Automatizacion en GitHub
 
