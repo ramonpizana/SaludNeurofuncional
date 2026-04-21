@@ -6,6 +6,7 @@ Landing page base para una fisioterapeuta o terapeuta fisica con:
 - Formulario local que abre Google Calendar y genera un respaldo `.ics`.
 - Configuracion publica para migrar despues a una agenda externa.
 - Base lista para publicar en Cloudflare Pages.
+- Webhooks para conectar Cal.com con confirmaciones por WhatsApp en Twilio.
 
 ## Archivos principales
 
@@ -15,6 +16,8 @@ Landing page base para una fisioterapeuta o terapeuta fisica con:
 - `site-config.js`
 - `wrangler.jsonc`
 - `DEPLOYMENT.md`
+- `functions/api/webhooks/calcom.js`
+- `functions/api/webhooks/twilio/inbound.js`
 
 ## Uso rapido
 
@@ -79,6 +82,38 @@ npm run validate
 
 La validacion ahora tambien confirma que el build a `dist/` funcione.
 
+## Automatizacion con Cal.com + Twilio
+
+La integracion actual agrega dos endpoints en Cloudflare Pages Functions:
+
+- `/api/webhooks/calcom`: recibe `BOOKING_CREATED`, `BOOKING_RESCHEDULED` y `BOOKING_CANCELLED` desde Cal.com y dispara WhatsApp por Twilio.
+- `/api/webhooks/twilio/inbound`: responde mensajes entrantes de WhatsApp con respuestas automaticas sencillas.
+
+Configuracion recomendada:
+
+- Duplica `.dev.vars.example` a `.dev.vars` para pruebas locales con `wrangler pages dev`.
+- En Cloudflare Pages agrega como secretos:
+  - `TWILIO_ACCOUNT_SID`
+  - `TWILIO_AUTH_TOKEN`
+  - `TWILIO_WHATSAPP_FROM` o `TWILIO_MESSAGING_SERVICE_SID`
+  - `CALCOM_WEBHOOK_SECRET`
+  - `TWILIO_CONTENT_SID_BOOKING_CREATED`
+  - `TWILIO_CONTENT_SID_BOOKING_RESCHEDULED`
+  - `TWILIO_CONTENT_SID_BOOKING_CANCELLED`
+- En Cloudflare Pages agrega como variables:
+  - `PUBLIC_SITE_URL`
+  - `CALCOM_BOOKING_URL`
+  - `CLINIC_NAME`
+  - `CLINIC_TIMEZONE`
+  - `CLINIC_LOCATION_LABEL`
+  - `DEFAULT_COUNTRY_DIAL_CODE`
+
+Puntos importantes:
+
+- En Cal.com el evento debe pedir telefono del paciente. Sin telefono, el webhook se omite para no enviar a un destino incorrecto.
+- Las confirmaciones salientes de WhatsApp usan plantillas aprobadas de Twilio Content Template Builder.
+- Las respuestas entrantes se contestan con TwiML, sin exponer credenciales en el cliente.
+
 ## Automatizacion en GitHub
 
 Se agregaron workflows en `.github/workflows/` para:
@@ -97,6 +132,6 @@ Si quieres bloquear merges a `main`, marca como requeridos:
 ## Siguiente paso recomendado
 
 1. Publicar la landing en Cloudflare Pages.
-2. Configurar dominio y SSL.
-3. Cambiar `site-config.js` a modo `external` cuando tengas la URL de Cal.com o Calendly.
-4. Conectar despues el webhook de reservas con WhatsApp oficial.
+2. Mantener `site-config.js` con el enlace real de Cal.com.
+3. Configurar secretos y webhooks para Twilio y Cal.com.
+4. Probar una reserva real y una respuesta entrante de WhatsApp.

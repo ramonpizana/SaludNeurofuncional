@@ -14,9 +14,16 @@ const requiredFiles = [
   "README.md",
   "package.json",
   "site-config.js",
+  ".dev.vars.example",
   "wrangler.jsonc",
   "scripts/build-static.mjs",
-  "functions/api/health.ts"
+  "functions/api/health.ts",
+  "server/formatting.js",
+  "server/runtime-config.js",
+  "server/calcom.js",
+  "server/twilio.js",
+  "functions/api/webhooks/calcom.js",
+  "functions/api/webhooks/twilio/inbound.js"
 ];
 
 const textExtensions = new Set([
@@ -205,14 +212,27 @@ function validateJavaScript() {
     addError("JavaScript validation failed: form selector is missing.");
   }
 
-  try {
-    execFileSync(process.execPath, ["--check", jsPath], {
-      cwd: rootDir,
-      stdio: "pipe"
-    });
-  } catch (error) {
-    const output = error.stderr?.toString().trim() || error.message;
-    addError(`JavaScript syntax check failed:\n${output}`);
+  const filesToCheck = [
+    "script.js",
+    "site-config.js",
+    "server/formatting.js",
+    "server/runtime-config.js",
+    "server/calcom.js",
+    "server/twilio.js",
+    "functions/api/webhooks/calcom.js",
+    "functions/api/webhooks/twilio/inbound.js"
+  ];
+
+  for (const filePath of filesToCheck) {
+    try {
+      execFileSync(process.execPath, ["--check", filePath], {
+        cwd: rootDir,
+        stdio: "pipe"
+      });
+    } catch (error) {
+      const output = error.stderr?.toString().trim() || error.message;
+      addError(`JavaScript syntax check failed for ${filePath}:\n${output}`);
+    }
   }
 }
 

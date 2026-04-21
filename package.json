@@ -1,6 +1,7 @@
 {
   "name": "salud-neurofuncional",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "node scripts/build-static.mjs",
     "deploy:cloudflare": "node scripts/build-static.mjs && npx wrangler pages deploy dist",
