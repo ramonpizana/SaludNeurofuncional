@@ -10,9 +10,9 @@ window.SN_SITE_CONFIG = {
     phoneDisplay: ""
   },
   booking: {
-    mode: "form",
-    externalUrl: "",
-    externalLabel: "Abrir agenda online",
+    mode: "external",
+    externalUrl: "https://cal.com/ramon-pizana",
+    externalLabel: "Reservar en linea",
     durationMinutes: 60,
     timezone: "America/Mexico_City"
   },
