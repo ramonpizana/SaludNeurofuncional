@@ -70,6 +70,8 @@ Secretos:
 - `TWILIO_CONTENT_SID_BOOKING_RESCHEDULED`
 - `TWILIO_CONTENT_SID_BOOKING_CANCELLED`
 
+Si quieres saber donde encontrar cada valor exacto y en que plataforma debe guardarse, sigue [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md).
+
 ## Configurar Cal.com
 
 1. En tu evento de Cal.com, confirma que el formulario pida telefono del paciente.
