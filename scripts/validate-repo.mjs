@@ -8,6 +8,8 @@ const warnings = [];
 
 const requiredFiles = [
   "_headers",
+  "ARCHITECTURE.md",
+  "CONFIGURATION.md",
   "index.html",
   "styles.css",
   "script.js",
@@ -16,7 +18,22 @@ const requiredFiles = [
   "site-config.js",
   ".dev.vars.example",
   "wrangler.jsonc",
+  "app/config.js",
+  "app/dom.js",
+  "app/main.js",
+  "app/utils/calendar.js",
+  "app/utils/whatsapp.js",
+  "app/features/appointment-form.js",
+  "app/features/booking-mode.js",
+  "app/features/branding.js",
+  "app/features/whatsapp-links.js",
   "scripts/build-static.mjs",
+  "styles/tokens.css",
+  "styles/base.css",
+  "styles/layout.css",
+  "styles/components.css",
+  "styles/sections.css",
+  "styles/responsive.css",
   "functions/api/health.ts",
   "server/formatting.js",
   "server/runtime-config.js",
@@ -165,12 +182,18 @@ function validateHtml() {
 function validateCss() {
   const cssPath = path.join(rootDir, "styles.css");
   const css = readFileSync(cssPath, "utf8");
+  const tokensCss = readFileSync(path.join(rootDir, "styles", "tokens.css"), "utf8");
+  const responsiveCss = readFileSync(path.join(rootDir, "styles", "responsive.css"), "utf8");
 
-  if (!css.includes(":root")) {
+  if (!css.includes('@import url("./styles/tokens.css");')) {
+    addError("CSS validation failed: styles.css should import the modular CSS files.");
+  }
+
+  if (!tokensCss.includes(":root")) {
     addError("CSS validation failed: expected :root variables block.");
   }
 
-  if (!css.includes("@media")) {
+  if (!responsiveCss.includes("@media")) {
     addError("CSS validation failed: expected at least one responsive media query.");
   }
 }
@@ -194,7 +217,9 @@ function validateBuildOutput() {
     "dist/styles.css",
     "dist/script.js",
     "dist/site-config.js",
-    "dist/_headers"
+    "dist/_headers",
+    "dist/app/main.js",
+    "dist/styles/base.css"
   ];
 
   for (const file of distFiles) {
@@ -208,13 +233,22 @@ function validateJavaScript() {
   const jsPath = path.join(rootDir, "script.js");
   const js = readFileSync(jsPath, "utf8");
 
-  if (!js.includes("appointment-form")) {
-    addError("JavaScript validation failed: form selector is missing.");
+  if (!js.includes("initSite")) {
+    addError("JavaScript validation failed: script entry should initialize the site.");
   }
 
   const filesToCheck = [
     "script.js",
     "site-config.js",
+    "app/config.js",
+    "app/dom.js",
+    "app/main.js",
+    "app/utils/calendar.js",
+    "app/utils/whatsapp.js",
+    "app/features/appointment-form.js",
+    "app/features/booking-mode.js",
+    "app/features/branding.js",
+    "app/features/whatsapp-links.js",
     "server/formatting.js",
     "server/runtime-config.js",
     "server/calcom.js",
