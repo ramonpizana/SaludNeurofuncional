@@ -1,0 +1,18 @@
+:root {
+  --bg: #f7f1e8;
+  --surface: rgba(255, 250, 244, 0.8);
+  --surface-strong: #fffaf4;
+  --card: rgba(255, 255, 255, 0.74);
+  --text: #1f2a28;
+  --muted: #5f6d69;
+  --line: rgba(31, 42, 40, 0.1);
+  --brand: #0e7064;
+  --brand-deep: #094b45;
+  --accent: #f39d6b;
+  --accent-soft: #ffd7bf;
+  --shadow: 0 24px 70px rgba(24, 39, 36, 0.12);
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --content-width: 1180px;
+}
