@@ -62,6 +62,9 @@ Pasos:
   - Para produccion: el numero que hayas dado de alta como WhatsApp Sender
 - `TWILIO_MESSAGING_SERVICE_SID`: Twilio Console > Messaging > Services, si eliges enviar por Messaging Service.
 - `TWILIO_CONTENT_SID_*`: Twilio Console > Content Template Builder, al crear y aprobar cada plantilla de WhatsApp.
+- El boton publico de la landing usa `site-config.js > contact.whatsappNumber`.
+  - Si no quieres exponer un numero publico todavia, dejalo vacio y el boton se oculta.
+  - No pongas ahi el numero de Twilio hasta confirmar que ya fue activado como WhatsApp Sender.
 
 ### Cal.com
 
