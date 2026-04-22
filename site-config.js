@@ -4,10 +4,10 @@ window.SN_SITE_CONFIG = {
   tagline: "Fisioterapia personalizada",
   locationLabel: "Consultorio Salud Neurofuncional",
   contact: {
-    whatsappNumber: "523311392354",
+    whatsappNumber: "",
     whatsappDefaultMessage: "Hola, quiero agendar una valoracion en Salud Neurofuncional.",
     email: "",
-    phoneDisplay: "+52 33 1139 2354"
+    phoneDisplay: ""
   },
   booking: {
     mode: "external",
