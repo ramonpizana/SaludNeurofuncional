@@ -12,6 +12,7 @@
 
   .hero,
   .booking-layout,
+  .faq-grid,
   .about-grid,
   .card-grid,
   .timeline,
@@ -22,6 +23,10 @@
   .hero h1,
   .section-heading h2 {
     max-width: none;
+  }
+
+  .faq-cta {
+    position: static;
   }
 }
 
@@ -62,6 +67,14 @@
 
   .button {
     justify-content: center;
+  }
+
+  .faq-trigger {
+    padding: 1.1rem 1rem;
+  }
+
+  .faq-panel {
+    padding: 0 1rem 1.1rem;
   }
 
   .site-footer {

@@ -4,6 +4,7 @@ function query(selector) {
 
 export function getDomNodes() {
   return {
+    faqNavLink: query('[data-nav="faq"]'),
     form: query("#appointment-form"),
     dateField: query("#appointment-date"),
     timeField: query("#appointment-time"),
@@ -23,6 +24,16 @@ export function getDomNodes() {
     externalBookingDescription: query("#external-booking-description"),
     whatsappSidebarLink: query("#whatsapp-link-sidebar"),
     whatsappExternalLink: query("#whatsapp-link-external"),
+    faqSection: query("#preguntas"),
+    faqEyebrow: query("#faq-eyebrow"),
+    faqTitle: query("#faq-title"),
+    faqIntro: query("#faq-intro"),
+    faqList: query("#faq-list"),
+    faqCtaCard: query("#faq-cta-card"),
+    faqCtaKicker: query("#faq-cta-kicker"),
+    faqCtaTitle: query("#faq-cta-title"),
+    faqCtaHelper: query("#faq-cta-helper"),
+    faqCtaLink: query("#faq-whatsapp-link"),
     headerCta: query("#header-cta"),
     primaryCta: query("#primary-cta")
   };

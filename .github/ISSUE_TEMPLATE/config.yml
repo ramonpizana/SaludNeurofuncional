@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Deployment and Cloudflare setup guide
+    url: https://github.com/ramonpizana/SaludNeurofuncional/blob/main/DEPLOYMENT.md
+    about: Review deployment and main-branch release steps before opening an operations question.
+  - name: Secure configuration guide
+    url: https://github.com/ramonpizana/SaludNeurofuncional/blob/main/CONFIGURATION.md
+    about: Review where secrets and public config belong before opening a configuration issue.

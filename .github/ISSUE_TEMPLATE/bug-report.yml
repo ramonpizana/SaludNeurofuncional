@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a regression or broken flow in the landing, booking experience, or automations.
+title: "[Bug]: "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is failing and why does it matter?
+      placeholder: A short description of the bug and the affected page or flow.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Landing content or styling
+        - FAQ / WhatsApp CTA
+        - Booking form or external booking flow
+        - Cloudflare Function / webhook
+        - Documentation or repository workflow
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact URL, browser, and actions when relevant.
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety checks
+      options:
+        - label: I removed or redacted any secrets, credentials, or personal data.
+          required: true
+        - label: I confirmed whether the issue affects production only, local only, or both.
+          required: true

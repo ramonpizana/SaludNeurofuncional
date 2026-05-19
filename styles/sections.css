@@ -140,6 +140,31 @@
   line-height: 1.7;
 }
 
+.faq-heading h2 {
+  max-width: 11ch;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.85fr);
+  gap: 1.3rem;
+  align-items: start;
+}
+
+.faq-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.faq-question {
+  margin: 0;
+}
+
+.faq-cta {
+  position: sticky;
+  top: 5.5rem;
+}
+
 .external-booking-panel h3 {
   margin: 0;
   font-size: 1.7rem;

@@ -26,7 +26,9 @@ const requiredFiles = [
   "app/features/appointment-form.js",
   "app/features/booking-mode.js",
   "app/features/branding.js",
+  "app/features/faq.js",
   "app/features/whatsapp-links.js",
+  "app/utils/links.js",
   "scripts/build-static.mjs",
   "styles/tokens.css",
   "styles/base.css",
@@ -118,7 +120,14 @@ function walk(directory) {
   const entries = readdirSync(directory, { withFileTypes: true });
 
   for (const entry of entries) {
-    if (entry.name === ".git" || entry.name === "dist" || entry.name === "node_modules") {
+    if (
+      entry.name === ".agents" ||
+      entry.name === ".git" ||
+      entry.name === ".specify" ||
+      entry.name === "dist" ||
+      entry.name === "node_modules" ||
+      entry.name === "specs"
+    ) {
       continue;
     }
 
@@ -248,7 +257,9 @@ function validateJavaScript() {
     "app/features/appointment-form.js",
     "app/features/booking-mode.js",
     "app/features/branding.js",
+    "app/features/faq.js",
     "app/features/whatsapp-links.js",
+    "app/utils/links.js",
     "server/formatting.js",
     "server/runtime-config.js",
     "server/calcom.js",

@@ -47,6 +47,19 @@ npx wrangler pages deploy dist
 - `https://saludneurofuncional.pages.dev/api/webhooks/calcom`
 - `https://saludneurofuncional.pages.dev/api/webhooks/twilio/inbound`
 
+## Despliegue automatico al mergear a `main`
+
+Si el proyecto de Cloudflare Pages ya esta conectado a este repositorio de
+GitHub y `main` es la rama de produccion, un PR aprobado y mergeado a `main`
+despliega el sitio automaticamente sin correr `wrangler pages deploy` a mano.
+
+Para que ese flujo sea seguro:
+
+1. Protege `main` y exige checks requeridos.
+2. Usa el template de PR del repo.
+3. Confirma `npm run validate` antes del merge.
+4. Documenta cualquier cambio de configuracion publica o secreto operativo.
+
 ## Variables y secretos en Cloudflare Pages
 
 En `Workers & Pages > tu proyecto > Settings > Variables and Secrets`, agrega:

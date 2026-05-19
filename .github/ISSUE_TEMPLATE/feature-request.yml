@@ -1,0 +1,44 @@
+name: Feature request
+description: Suggest a product, content, or workflow improvement for the site or repository.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What user or operational problem are we trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the feature or improvement you want.
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Primary impact area
+      options:
+        - Marketing / landing conversion
+        - FAQ / WhatsApp contact flow
+        - Booking experience
+        - Cloudflare / automation
+        - Documentation / repository governance
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints or risks
+      description: Note any security, content, accessibility, or deployment concerns.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Review checklist
+      options:
+        - label: This request does not require committing secrets or personal data.
+          required: true
+        - label: I called out any expected config, deployment, or workflow impact.
+          required: true

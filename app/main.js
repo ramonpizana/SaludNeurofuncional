@@ -3,6 +3,7 @@ import { getDomNodes } from "./dom.js";
 import { initializeAppointmentForm } from "./features/appointment-form.js";
 import { applyBookingMode } from "./features/booking-mode.js";
 import { applyBranding } from "./features/branding.js";
+import { initializeFaq } from "./features/faq.js";
 import { applyWhatsAppLinks } from "./features/whatsapp-links.js";
 
 export function initSite() {
@@ -10,6 +11,7 @@ export function initSite() {
   const dom = getDomNodes();
 
   applyBranding(siteConfig, dom);
+  initializeFaq(siteConfig, dom);
   applyWhatsAppLinks(siteConfig, dom);
   const usesExternalBooking = applyBookingMode(siteConfig, dom);
 

@@ -22,8 +22,8 @@ Mantener la landing, la automatizacion con webhooks y la configuracion operativa
 
 - `config.js`: normaliza la configuracion publica.
 - `dom.js`: centraliza referencias del DOM.
-- `utils/`: utilidades puras para calendario y WhatsApp.
-- `features/`: comportamiento por area, como branding, booking mode y formulario.
+- `utils/`: utilidades puras para calendario, WhatsApp y comportamiento seguro de enlaces.
+- `features/`: comportamiento por area, como branding, booking mode, FAQ y formulario.
 - `main.js`: orquestacion de inicializacion.
 
 `styles/` esta separado por capas:
