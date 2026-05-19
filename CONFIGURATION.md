@@ -71,6 +71,34 @@ Pasos:
 - `CALCOM_BOOKING_URL`: tu URL publica de reserva, por ejemplo `https://cal.com/ramon-pizana`.
 - `CALCOM_WEBHOOK_SECRET`: lo defines tu al crear el webhook en Cal.com. Debe ser el mismo valor guardado en Cloudflare Pages.
 
+## Contenido FAQ en `site-config.js`
+
+La landing ahora acepta un bloque publico `faq` dentro de `site-config.js`.
+
+Campos recomendados:
+
+- `eyebrow`
+- `title`
+- `intro`
+- `ctaKicker`
+- `ctaTitle`
+- `ctaHelper`
+- `ctaLabel`
+- `ctaMessage`
+- `items`
+
+Cada elemento de `items` debe incluir:
+
+- `id`
+- `question`
+- `answer`
+
+Reglas:
+
+- Todo el contenido FAQ debe ser seguro para exponer publicamente.
+- Si `contact.whatsappNumber` esta vacio, la CTA de FAQ se oculta para evitar enlaces rotos.
+- Usa `ctaMessage` solo para texto publico de precontacto; nunca pongas datos sensibles, tokens o informacion clinica privada.
+
 ## Numero de Twilio y WhatsApp
 
 Que Twilio te haya dado un numero no significa que ya sea un sender de WhatsApp.

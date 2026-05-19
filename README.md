@@ -2,7 +2,7 @@
 
 Landing page base para una fisioterapeuta o terapeuta fisica con:
 
-- Secciones informativas sobre enfoque, servicios y proceso de atencion.
+- Secciones informativas sobre enfoque, servicios, proceso de atencion y preguntas frecuentes.
 - Formulario local que abre Google Calendar y genera un respaldo `.ics`.
 - Configuracion publica para migrar despues a una agenda externa.
 - Base lista para publicar en Cloudflare Pages.
@@ -32,6 +32,7 @@ Edita `site-config.js` para personalizar:
 - nombre y marca
 - direccion o texto del consultorio
 - numero de WhatsApp
+- preguntas frecuentes y copy de la CTA de contacto
 - modo de agenda
 
 Modos de agenda soportados:
@@ -147,6 +148,17 @@ Si quieres bloquear merges a `main`, marca como requeridos:
 - `Secret Scan`
 - `CodeQL / Analyze (javascript-typescript)`
 - `CodeQL / Analyze (actions)`
+
+Ademas, usa el template de PR y evita mergear cambios de UI sin:
+
+- `npm run validate`
+- revision visual en desktop y mobile
+- confirmacion de que no se agregaron secretos ni datos sensibles
+
+Si tu proyecto de Cloudflare Pages esta conectado a este repositorio y `main`
+es la rama de produccion, un PR aprobado y mergeado a `main` dispara el
+despliegue automaticamente. Si no existe esa conexion, sigue el flujo manual de
+`DEPLOYMENT.md`.
 
 ## Siguiente paso recomendado
 

@@ -1,3 +1,4 @@
+import { applyOptionalLink } from "../utils/links.js";
 import { buildWhatsAppUrl } from "../utils/whatsapp.js";
 
 export function applyWhatsAppLinks(siteConfig, dom) {
@@ -7,13 +8,6 @@ export function applyWhatsAppLinks(siteConfig, dom) {
   );
 
   [dom.whatsappSidebarLink, dom.whatsappExternalLink].forEach((element) => {
-    if (!whatsappUrl) {
-      element.hidden = true;
-      element.removeAttribute("href");
-      return;
-    }
-
-    element.hidden = false;
-    element.href = whatsappUrl;
+    applyOptionalLink(element, whatsappUrl);
   });
 }
