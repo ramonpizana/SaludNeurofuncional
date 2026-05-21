@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const rootDir = process.cwd();
@@ -28,10 +28,18 @@ function copyPathSync(source, destination) {
   }
 
   mkdirSync(path.dirname(destination), { recursive: true });
-  copyFileSync(source, destination);
+
+  try {
+    copyFileSync(source, destination);
+  } catch (error) {
+    if (error?.code === "EPERM" && existsSync(destination)) {
+      return;
+    }
+
+    throw error;
+  }
 }
 
-rmSync(distDir, { recursive: true, force: true });
 mkdirSync(distDir, { recursive: true });
 
 for (const filePath of pathsToCopy) {

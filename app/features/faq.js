@@ -49,6 +49,16 @@ function createFaqItem(item) {
   return article;
 }
 
+function createFaqAction(action, whatsappNumber) {
+  const link = document.createElement("a");
+  link.className = "button button-secondary faq-action-link";
+  link.target = "_blank";
+  link.rel = "noopener";
+  link.textContent = action.label;
+  link.href = buildWhatsAppUrl(whatsappNumber, action.message);
+  return link;
+}
+
 export function initializeFaq(siteConfig, dom) {
   const {
     faqNavLink,
@@ -61,7 +71,8 @@ export function initializeFaq(siteConfig, dom) {
     faqCtaKicker,
     faqCtaTitle,
     faqCtaHelper,
-    faqCtaLink
+    faqCtaLink,
+    faqQuickActions
   } = dom;
 
   if (!faqSection || !faqList) {
@@ -104,11 +115,29 @@ export function initializeFaq(siteConfig, dom) {
   faqCtaHelper.textContent = faq.ctaHelper;
   faqCtaLink.textContent = faq.ctaLabel;
 
-  const whatsappUrl = buildWhatsAppUrl(
-    siteConfig.contact.whatsappNumber,
-    faq.ctaMessage || siteConfig.contact.whatsappDefaultMessage
-  );
+  const whatsappNumber = siteConfig.contact.whatsappNumber;
+  const whatsappUrl = buildWhatsAppUrl(whatsappNumber, faq.ctaMessage || siteConfig.contact.whatsappDefaultMessage);
+  const actions = Array.isArray(faq.ctaActions) ? faq.ctaActions : [];
 
   const hasFaqCta = applyOptionalLink(faqCtaLink, whatsappUrl);
-  faqCtaCard.hidden = !hasFaqCta;
+
+  if (faqQuickActions) {
+    faqQuickActions.replaceChildren();
+
+    if (whatsappNumber && actions.length) {
+      const fragment = document.createDocumentFragment();
+
+      actions.forEach((action) => {
+        fragment.append(createFaqAction(action, whatsappNumber));
+      });
+
+      faqQuickActions.append(fragment);
+      faqQuickActions.hidden = false;
+    } else {
+      faqQuickActions.hidden = true;
+    }
+  }
+
+  const hasQuickActions = Boolean(whatsappNumber && actions.length);
+  faqCtaCard.hidden = !hasFaqCta && !hasQuickActions;
 }

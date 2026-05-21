@@ -1,5 +1,7 @@
 import { extractBookingFromCalcom, verifyCalcomSignature } from "../../../server/calcom.js";
 import { maskPhoneNumber } from "../../../server/formatting.js";
+import { sendMetaTemplateMessage } from "../../../server/meta-whatsapp.js";
+import { getContentLength, hasAllowedContentType } from "../../../server/request-guards.js";
 import { getRuntimeConfig } from "../../../server/runtime-config.js";
 import { sendWhatsAppTemplate } from "../../../server/twilio.js";
 
@@ -8,6 +10,23 @@ const SUPPORTED_EVENTS = new Set([
   "BOOKING_RESCHEDULED",
   "BOOKING_CANCELLED"
 ]);
+const MAX_CALCOM_WEBHOOK_BYTES = 256 * 1024;
+
+function isTwilioReady(config) {
+  return Boolean(
+    config.twilio.accountSid &&
+      config.twilio.authToken &&
+      (config.twilio.whatsappFrom || config.twilio.messagingServiceSid)
+  );
+}
+
+function isMetaReady(config) {
+  return Boolean(config.meta.accessToken && config.meta.phoneNumberId);
+}
+
+function getActiveProvider(config) {
+  return config.whatsappProvider === "meta" ? "meta" : "twilio";
+}
 
 function jsonResponse(payload, status = 200) {
   return Response.json(payload, {
@@ -19,11 +38,11 @@ function jsonResponse(payload, status = 200) {
 }
 
 function ensureTwilioReady(config) {
-  return Boolean(
-    config.twilio.accountSid &&
-      config.twilio.authToken &&
-      (config.twilio.whatsappFrom || config.twilio.messagingServiceSid)
-  );
+  return isTwilioReady(config);
+}
+
+function ensureMetaReady(config) {
+  return isMetaReady(config);
 }
 
 function buildContentVariables(triggerEvent, booking, config) {
@@ -46,21 +65,36 @@ function buildContentVariables(triggerEvent, booking, config) {
 
 export const onRequestGet = async ({ env }) => {
   const config = getRuntimeConfig(env);
+  const provider = getActiveProvider(config);
 
   return jsonResponse({
     ok: true,
     endpoint: "calcom-webhook",
+    provider,
     supportedEvents: [...SUPPORTED_EVENTS],
     twilioReady: ensureTwilioReady(config),
-    templates: Object.fromEntries(
-      [...SUPPORTED_EVENTS].map((eventName) => [eventName, Boolean(config.twilio.contentSidByEvent[eventName])])
-    ),
+    metaReady: ensureMetaReady(config),
+    templates:
+      provider === "meta"
+        ? Object.fromEntries(
+            [...SUPPORTED_EVENTS].map((eventName) => [
+              eventName,
+              Boolean(config.meta.templateNameByEvent[eventName])
+            ])
+          )
+        : Object.fromEntries(
+            [...SUPPORTED_EVENTS].map((eventName) => [
+              eventName,
+              Boolean(config.twilio.contentSidByEvent[eventName])
+            ])
+          ),
     requiresPhoneCollection: true
   });
 };
 
 export const onRequestPost = async ({ request, env }) => {
   const config = getRuntimeConfig(env);
+  const provider = getActiveProvider(config);
 
   if (!env.CALCOM_WEBHOOK_SECRET) {
     return jsonResponse(
@@ -72,7 +106,17 @@ export const onRequestPost = async ({ request, env }) => {
     );
   }
 
-  if (!ensureTwilioReady(config)) {
+  if (provider === "meta" && !ensureMetaReady(config)) {
+    return jsonResponse(
+      {
+        ok: false,
+        error: "Meta WhatsApp outbound configuration is incomplete."
+      },
+      500
+    );
+  }
+
+  if (provider === "twilio" && !ensureTwilioReady(config)) {
     return jsonResponse(
       {
         ok: false,
@@ -82,8 +126,41 @@ export const onRequestPost = async ({ request, env }) => {
     );
   }
 
+  if (!hasAllowedContentType(request, ["application/json"])) {
+    return jsonResponse(
+      {
+        ok: false,
+        error: "Unsupported content type."
+      },
+      415
+    );
+  }
+
+  const contentLength = getContentLength(request);
+
+  if (contentLength !== null && contentLength > MAX_CALCOM_WEBHOOK_BYTES) {
+    return jsonResponse(
+      {
+        ok: false,
+        error: "Payload too large."
+      },
+      413
+    );
+  }
+
   const rawBody = await request.text();
   const signature = request.headers.get("x-cal-signature-256");
+
+  if (!signature) {
+    return jsonResponse(
+      {
+        ok: false,
+        error: "Missing Cal.com signature."
+      },
+      403
+    );
+  }
+
   const isValidSignature = await verifyCalcomSignature(
     rawBody,
     env.CALCOM_WEBHOOK_SECRET,
@@ -125,15 +202,22 @@ export const onRequestPost = async ({ request, env }) => {
     });
   }
 
-  const contentSid = config.twilio.contentSidByEvent[triggerEvent];
+  const providerTemplate =
+    provider === "meta"
+      ? config.meta.templateNameByEvent[triggerEvent]
+      : config.twilio.contentSidByEvent[triggerEvent];
 
-  if (!contentSid) {
-    console.warn(`Skipping ${triggerEvent}: missing Twilio content SID.`);
+  if (!providerTemplate) {
+    console.warn(`Skipping ${triggerEvent}: missing ${provider} template configuration.`);
     return jsonResponse({
       ok: true,
       skipped: true,
       triggerEvent,
-      reason: "Missing Twilio content SID for this event."
+      provider,
+      reason:
+        provider === "meta"
+          ? "Missing Meta template name for this event."
+          : "Missing Twilio content SID for this event."
     });
   }
 
@@ -155,28 +239,42 @@ export const onRequestPost = async ({ request, env }) => {
   }
 
   try {
-    const message = await sendWhatsAppTemplate({
-      accountSid: config.twilio.accountSid,
-      authToken: config.twilio.authToken,
-      whatsappFrom: config.twilio.whatsappFrom,
-      messagingServiceSid: config.twilio.messagingServiceSid,
-      to: booking.attendeePhone,
-      contentSid,
-      contentVariables: buildContentVariables(triggerEvent, booking, config)
-    });
+    const contentVariables = buildContentVariables(triggerEvent, booking, config);
+    const message =
+      provider === "meta"
+        ? await sendMetaTemplateMessage({
+            accessToken: config.meta.accessToken,
+            apiVersion: config.meta.apiVersion,
+            phoneNumberId: config.meta.phoneNumberId,
+            to: booking.attendeePhone.replace(/^\+/, ""),
+            templateName: providerTemplate,
+            languageCode: config.meta.templateLanguageCode,
+            bodyParameters: Object.values(contentVariables)
+          })
+        : await sendWhatsAppTemplate({
+            accountSid: config.twilio.accountSid,
+            authToken: config.twilio.authToken,
+            whatsappFrom: config.twilio.whatsappFrom,
+            messagingServiceSid: config.twilio.messagingServiceSid,
+            to: booking.attendeePhone,
+            contentSid: providerTemplate,
+            contentVariables
+          });
 
     return jsonResponse({
       ok: true,
+      provider,
       triggerEvent,
       bookingId: booking.bookingId || null,
       to: maskPhoneNumber(booking.attendeePhone),
-      messageSid: message?.sid || null
+      messageSid: message?.messages?.[0]?.id || message?.sid || null
     });
   } catch (error) {
-    console.error("Twilio send failed", error);
+    console.error(`WhatsApp ${provider} send failed`, error);
     return jsonResponse(
       {
         ok: false,
+        provider,
         triggerEvent,
         bookingId: booking.bookingId || null,
         error: error.message

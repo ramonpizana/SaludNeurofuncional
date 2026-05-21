@@ -10,6 +10,7 @@ const requiredFiles = [
   "_headers",
   "ARCHITECTURE.md",
   "CONFIGURATION.md",
+  "SECURITY.md",
   "index.html",
   "styles.css",
   "script.js",
@@ -40,9 +41,12 @@ const requiredFiles = [
   "server/formatting.js",
   "server/runtime-config.js",
   "server/calcom.js",
+  "server/meta-whatsapp.js",
+  "server/request-guards.js",
   "server/twilio.js",
   "functions/api/webhooks/calcom.js",
-  "functions/api/webhooks/twilio/inbound.js"
+  "functions/api/webhooks/twilio/inbound.js",
+  "functions/api/webhooks/meta/whatsapp.js"
 ];
 
 const textExtensions = new Set([
@@ -263,9 +267,12 @@ function validateJavaScript() {
     "server/formatting.js",
     "server/runtime-config.js",
     "server/calcom.js",
+    "server/meta-whatsapp.js",
+    "server/request-guards.js",
     "server/twilio.js",
     "functions/api/webhooks/calcom.js",
-    "functions/api/webhooks/twilio/inbound.js"
+    "functions/api/webhooks/twilio/inbound.js",
+    "functions/api/webhooks/meta/whatsapp.js"
   ];
 
   for (const filePath of filesToCheck) {

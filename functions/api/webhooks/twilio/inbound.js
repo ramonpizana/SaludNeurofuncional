@@ -1,9 +1,12 @@
 import { getRuntimeConfig } from "../../../../server/runtime-config.js";
+import { getContentLength, hasAllowedContentType } from "../../../../server/request-guards.js";
 import {
   buildMessagingResponse,
   createAutoReply,
   validateTwilioSignature
 } from "../../../../server/twilio.js";
+
+const MAX_TWILIO_WEBHOOK_BYTES = 64 * 1024;
 
 export const onRequestGet = async () => {
   return Response.json(
@@ -28,9 +31,30 @@ export const onRequestPost = async ({ request, env }) => {
     });
   }
 
+  if (!hasAllowedContentType(request, ["application/x-www-form-urlencoded", "multipart/form-data"])) {
+    return new Response("Unsupported Media Type", {
+      status: 415
+    });
+  }
+
+  const contentLength = getContentLength(request);
+
+  if (contentLength !== null && contentLength > MAX_TWILIO_WEBHOOK_BYTES) {
+    return new Response("Payload Too Large", {
+      status: 413
+    });
+  }
+
   const formData = await request.formData();
   const signature =
     request.headers.get("x-twilio-signature") || request.headers.get("X-Twilio-Signature");
+
+  if (!signature) {
+    return new Response("Forbidden", {
+      status: 403
+    });
+  }
+
   const isValidSignature = await validateTwilioSignature({
     authToken: config.twilio.authToken,
     signature,

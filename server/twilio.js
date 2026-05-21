@@ -150,7 +150,7 @@ export function createAutoReply({ incomingText, profileName, config }) {
   const bookingUrl = config.bookingUrl || config.siteUrl;
   const firstName = pickFirstName(profileName);
   const greeting = firstName ? `Hola ${firstName}` : "Hola";
-  const message = normalizeKeywordText(incomingText);
+  const message = normalizeKeywordText(String(incomingText || "").slice(0, 500));
 
   if (!message) {
     return `${greeting}, gracias por escribir a ${clinicName}. Puedes reservar aqui: ${bookingUrl}. Si necesitas ayuda, responde AGENDAR, REAGENDAR o UBICACION.`;

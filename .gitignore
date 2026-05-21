@@ -10,5 +10,3 @@ coverage/
 !.dev.vars.example
 .agents/
 .specify/
-AGENTS.md
-specs/

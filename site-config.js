@@ -27,6 +27,20 @@ window.SN_SITE_CONFIG = {
       "Si prefieres confirmar si este servicio es para ti antes de reservar, escribe por WhatsApp y te orientamos.",
     ctaLabel: "Resolver mi duda por WhatsApp",
     ctaMessage: "Hola, tengo una duda antes de agendar una valoracion en Salud Neurofuncional.",
+    ctaActions: [
+      {
+        label: "Quiero agendar",
+        message: "Hola, quiero ayuda para agendar una valoracion en Salud Neurofuncional."
+      },
+      {
+        label: "Necesito ubicacion",
+        message: "Hola, me compartes la ubicacion del consultorio de Salud Neurofuncional?"
+      },
+      {
+        label: "Tengo duda sobre costos",
+        message: "Hola, tengo una duda sobre costos y proceso de atencion en Salud Neurofuncional."
+      }
+    ],
     items: [
       {
         id: "valoracion-inicial",

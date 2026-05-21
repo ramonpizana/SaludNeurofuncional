@@ -19,6 +19,20 @@ const defaultFaq = {
     "Si prefieres confirmar si este servicio es para ti antes de reservar, escribe por WhatsApp y te orientamos.",
   ctaLabel: "Resolver mi duda por WhatsApp",
   ctaMessage: "Hola, tengo una duda antes de agendar una valoracion.",
+  ctaActions: [
+    {
+      label: "Quiero agendar",
+      message: "Hola, quiero ayuda para agendar una valoracion."
+    },
+    {
+      label: "Necesito ubicacion",
+      message: "Hola, me compartes la ubicacion del consultorio?"
+    },
+    {
+      label: "Tengo duda sobre costos",
+      message: "Hola, tengo una duda sobre costos y proceso de atencion."
+    }
+  ],
   items: [
     {
       id: "valoracion-inicial",
@@ -69,10 +83,35 @@ function normalizeFaqItem(item, index) {
   };
 }
 
+function normalizeFaqAction(item, index, fallbackMessage) {
+  if (!item || typeof item !== "object") {
+    return null;
+  }
+
+  const label = String(item.label || "").trim();
+  const message = String(item.message || fallbackMessage || "").trim();
+
+  if (!label || !message) {
+    return null;
+  }
+
+  return {
+    id: `faq-action-${index + 1}`,
+    label,
+    message
+  };
+}
+
 function getFaqConfig(configuredFaq) {
   const faqConfig = configuredFaq && typeof configuredFaq === "object" ? configuredFaq : {};
   const items = Array.isArray(faqConfig.items)
     ? faqConfig.items.map(normalizeFaqItem).filter(Boolean)
+    : [];
+  const ctaFallbackMessage = faqConfig.ctaMessage || defaultFaq.ctaMessage;
+  const ctaActions = Array.isArray(faqConfig.ctaActions)
+    ? faqConfig.ctaActions
+        .map((item, index) => normalizeFaqAction(item, index, ctaFallbackMessage))
+        .filter(Boolean)
     : [];
 
   return {
@@ -83,7 +122,8 @@ function getFaqConfig(configuredFaq) {
     ctaTitle: faqConfig.ctaTitle || defaultFaq.ctaTitle,
     ctaHelper: faqConfig.ctaHelper || defaultFaq.ctaHelper,
     ctaLabel: faqConfig.ctaLabel || defaultFaq.ctaLabel,
-    ctaMessage: faqConfig.ctaMessage || defaultFaq.ctaMessage,
+    ctaMessage: ctaFallbackMessage,
+    ctaActions: ctaActions.length ? ctaActions : defaultFaq.ctaActions,
     items: items.length ? items : defaultFaq.items
   };
 }

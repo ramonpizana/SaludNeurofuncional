@@ -40,7 +40,8 @@ Mantener la landing, la automatizacion con webhooks y la configuracion operativa
 - `functions/api/health.ts`: health check.
 - `functions/api/webhooks/calcom.js`: recibe eventos de Cal.com.
 - `functions/api/webhooks/twilio/inbound.js`: responde mensajes entrantes de WhatsApp.
-- `server/*.js`: logica reutilizable para firma, Twilio, Cal.com y runtime config.
+- `functions/api/webhooks/meta/whatsapp.js`: verifica webhook de Meta y responde mensajes entrantes.
+- `server/*.js`: logica reutilizable para firma, guards HTTP, Twilio, Meta, Cal.com y runtime config.
 
 ## Regla de mantenimiento
 
