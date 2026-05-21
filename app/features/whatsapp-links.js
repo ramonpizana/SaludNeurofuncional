@@ -1,13 +1,23 @@
 import { applyOptionalLink } from "../utils/links.js";
-import { buildWhatsAppUrl } from "../utils/whatsapp.js";
+import { buildPublicWhatsAppLink } from "../utils/whatsapp.js";
 
 export function applyWhatsAppLinks(siteConfig, dom) {
-  const whatsappUrl = buildWhatsAppUrl(
-    siteConfig.contact.whatsappNumber,
-    siteConfig.contact.whatsappDefaultMessage
-  );
+  const links = [
+    {
+      element: dom.whatsappSidebarLink,
+      href: buildPublicWhatsAppLink(siteConfig.contact, {
+        source: "booking-sidebar"
+      })
+    },
+    {
+      element: dom.whatsappExternalLink,
+      href: buildPublicWhatsAppLink(siteConfig.contact, {
+        source: "booking-external"
+      })
+    }
+  ];
 
-  [dom.whatsappSidebarLink, dom.whatsappExternalLink].forEach((element) => {
-    applyOptionalLink(element, whatsappUrl);
+  links.forEach(({ element, href }) => {
+    applyOptionalLink(element, href);
   });
 }

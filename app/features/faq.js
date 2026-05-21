@@ -1,5 +1,5 @@
 import { applyOptionalLink } from "../utils/links.js";
-import { buildWhatsAppUrl } from "../utils/whatsapp.js";
+import { buildPublicWhatsAppLink } from "../utils/whatsapp.js";
 
 function createFaqItem(item) {
   const article = document.createElement("article");
@@ -49,13 +49,16 @@ function createFaqItem(item) {
   return article;
 }
 
-function createFaqAction(action, whatsappNumber) {
+function createFaqAction(action, contactConfig) {
   const link = document.createElement("a");
   link.className = "button button-secondary faq-action-link";
   link.target = "_blank";
   link.rel = "noopener";
   link.textContent = action.label;
-  link.href = buildWhatsAppUrl(whatsappNumber, action.message);
+  link.href = buildPublicWhatsAppLink(contactConfig, {
+    message: action.message,
+    source: action.id
+  });
   return link;
 }
 
@@ -115,8 +118,10 @@ export function initializeFaq(siteConfig, dom) {
   faqCtaHelper.textContent = faq.ctaHelper;
   faqCtaLink.textContent = faq.ctaLabel;
 
-  const whatsappNumber = siteConfig.contact.whatsappNumber;
-  const whatsappUrl = buildWhatsAppUrl(whatsappNumber, faq.ctaMessage || siteConfig.contact.whatsappDefaultMessage);
+  const whatsappUrl = buildPublicWhatsAppLink(siteConfig.contact, {
+    message: faq.ctaMessage || siteConfig.contact.whatsappDefaultMessage,
+    source: "faq-cta"
+  });
   const actions = Array.isArray(faq.ctaActions) ? faq.ctaActions : [];
 
   const hasFaqCta = applyOptionalLink(faqCtaLink, whatsappUrl);
@@ -124,11 +129,11 @@ export function initializeFaq(siteConfig, dom) {
   if (faqQuickActions) {
     faqQuickActions.replaceChildren();
 
-    if (whatsappNumber && actions.length) {
+    if (whatsappUrl && actions.length) {
       const fragment = document.createDocumentFragment();
 
       actions.forEach((action) => {
-        fragment.append(createFaqAction(action, whatsappNumber));
+        fragment.append(createFaqAction(action, siteConfig.contact));
       });
 
       faqQuickActions.append(fragment);
@@ -138,6 +143,6 @@ export function initializeFaq(siteConfig, dom) {
     }
   }
 
-  const hasQuickActions = Boolean(whatsappNumber && actions.length);
+  const hasQuickActions = Boolean(whatsappUrl && actions.length);
   faqCtaCard.hidden = !hasFaqCta && !hasQuickActions;
 }

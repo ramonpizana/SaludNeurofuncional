@@ -42,6 +42,9 @@ export function getRuntimeConfig(env = {}) {
     locationLabel: cleanText(env.CLINIC_LOCATION_LABEL, DEFAULTS.locationLabel),
     defaultCountryDialCode,
     whatsappProvider: cleanText(env.WHATSAPP_PROVIDER, DEFAULTS.whatsappProvider).toLowerCase(),
+    contactGateway: {
+      redirectNumber: normalizePhoneNumber(env.WHATSAPP_REDIRECT_NUMBER, defaultCountryDialCode)
+    },
     twilio: {
       accountSid: cleanText(env.TWILIO_ACCOUNT_SID),
       authToken: cleanText(env.TWILIO_AUTH_TOKEN),
