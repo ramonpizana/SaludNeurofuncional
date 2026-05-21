@@ -6,7 +6,7 @@ Landing page base para una fisioterapeuta o terapeuta fisica con:
 - Formulario local que abre Google Calendar y genera un respaldo `.ics`.
 - Configuracion publica para migrar despues a una agenda externa.
 - Base lista para publicar en Cloudflare Pages.
-- Webhooks para conectar Cal.com con confirmaciones por WhatsApp en Twilio.
+- Webhooks para conectar Cal.com con confirmaciones por WhatsApp usando Twilio o Meta Cloud API.
 
 ## Archivos principales
 
@@ -20,6 +20,7 @@ Landing page base para una fisioterapeuta o terapeuta fisica con:
 - `CONFIGURATION.md`
 - `functions/api/webhooks/calcom.js`
 - `functions/api/webhooks/twilio/inbound.js`
+- `functions/api/webhooks/meta/whatsapp.js`
 
 ## Uso rapido
 
@@ -34,6 +35,8 @@ Edita `site-config.js` para personalizar:
 - numero de WhatsApp
 - preguntas frecuentes y copy de la CTA de contacto
 - modo de agenda
+
+Ademas, la FAQ ya soporta acciones rapidas de WhatsApp con mensajes prellenados mediante `faq.ctaActions`.
 
 Modos de agenda soportados:
 
@@ -53,6 +56,30 @@ Referencia rapida:
 
 - [ARCHITECTURE.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/ARCHITECTURE.md)
 - [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md)
+- [SECURITY.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/SECURITY.md)
+
+## Como usar Spec Kit en este repo
+
+`spec-kit` ya esta inicializado y se usa asi:
+
+- `.specify/`: plantillas, scripts y memoria del flujo de trabajo
+- `.agents/skills/`: skills locales que Codex puede seguir para `specify`, `plan`, `tasks` y flujo git
+- `AGENTS.md`: apunta al plan activo que el agente debe leer primero
+- `specs/`: aqui viven las features especificadas
+
+En este momento, la feature activa es:
+
+- [specs/002-meta-whatsapp-cloud/spec.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/specs/002-meta-whatsapp-cloud/spec.md)
+- [specs/002-meta-whatsapp-cloud/plan.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/specs/002-meta-whatsapp-cloud/plan.md)
+- [specs/002-meta-whatsapp-cloud/tasks.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/specs/002-meta-whatsapp-cloud/tasks.md)
+
+Flujo recomendado:
+
+1. Define la mejora en `spec.md`.
+2. Baja esa idea a diseno tecnico en `plan.md`.
+3. Convierte el trabajo en tareas concretas en `tasks.md`.
+4. Implementa y valida con `npm run validate`.
+5. Documenta cualquier cambio operativo en README, CONFIGURATION o DEPLOYMENT.
 
 ## Build para Cloudflare Pages
 
@@ -101,17 +128,22 @@ npm run validate
 
 La validacion ahora tambien confirma que el build a `dist/` funcione.
 
-## Automatizacion con Cal.com + Twilio
+## Automatizacion con Cal.com + WhatsApp
 
-La integracion actual agrega dos endpoints en Cloudflare Pages Functions:
+La integracion actual agrega estos endpoints en Cloudflare Pages Functions:
 
-- `/api/webhooks/calcom`: recibe `BOOKING_CREATED`, `BOOKING_RESCHEDULED` y `BOOKING_CANCELLED` desde Cal.com y dispara WhatsApp por Twilio.
+- `/api/webhooks/calcom`: recibe `BOOKING_CREATED`, `BOOKING_RESCHEDULED` y `BOOKING_CANCELLED` desde Cal.com y dispara WhatsApp por el proveedor configurado.
 - `/api/webhooks/twilio/inbound`: responde mensajes entrantes de WhatsApp con respuestas automaticas sencillas.
+- `/api/webhooks/meta/whatsapp`: verifica webhook de Meta y responde mensajes entrantes por Cloud API.
 
 Configuracion recomendada:
 
 - Duplica `.dev.vars.example` a `.dev.vars` para pruebas locales con `wrangler pages dev`.
 - En Cloudflare Pages agrega como secretos:
+  - `META_APP_SECRET`
+  - `META_WHATSAPP_ACCESS_TOKEN`
+  - `META_WHATSAPP_PHONE_NUMBER_ID`
+  - `META_WHATSAPP_VERIFY_TOKEN`
   - `TWILIO_ACCOUNT_SID`
   - `TWILIO_AUTH_TOKEN`
   - `TWILIO_WHATSAPP_FROM` o `TWILIO_MESSAGING_SERVICE_SID`
@@ -119,20 +151,66 @@ Configuracion recomendada:
   - `TWILIO_CONTENT_SID_BOOKING_CREATED`
   - `TWILIO_CONTENT_SID_BOOKING_RESCHEDULED`
   - `TWILIO_CONTENT_SID_BOOKING_CANCELLED`
+  - `META_TEMPLATE_BOOKING_CREATED`
+  - `META_TEMPLATE_BOOKING_RESCHEDULED`
+  - `META_TEMPLATE_BOOKING_CANCELLED`
 - En Cloudflare Pages agrega como variables:
+  - `WHATSAPP_PROVIDER`
   - `PUBLIC_SITE_URL`
   - `CALCOM_BOOKING_URL`
   - `CLINIC_NAME`
   - `CLINIC_TIMEZONE`
   - `CLINIC_LOCATION_LABEL`
   - `DEFAULT_COUNTRY_DIAL_CODE`
+  - `META_WHATSAPP_API_VERSION`
+  - `META_TEMPLATE_LANGUAGE_CODE`
 
 Puntos importantes:
 
 - En Cal.com el evento debe pedir telefono del paciente. Sin telefono, el webhook se omite para no enviar a un destino incorrecto.
 - Las confirmaciones salientes de WhatsApp usan plantillas aprobadas de Twilio Content Template Builder.
-- Las respuestas entrantes se contestan con TwiML, sin exponer credenciales en el cliente.
+- Las respuestas entrantes de Twilio se contestan con TwiML, sin exponer credenciales en el cliente.
+- Si usas `WHATSAPP_PROVIDER=meta`, las confirmaciones de Cal.com salen por Meta Cloud API y el webhook entrante va por `/api/webhooks/meta/whatsapp`.
 - La guia paso a paso de donde encontrar cada valor esta en [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md).
+
+## Meta Cloud API: que conviene hacer
+
+No necesitas instalar el sample repo de Meta para este proyecto. Ese repo esta pensado como una app Node separada con `.env`, webhook propio y server dedicado. Aqui es mas practico:
+
+- dejar la landing y agenda en este mismo repo
+- usar Cloudflare Pages Functions para el webhook de Meta
+- guardar access token, verify token y app secret en Cloudflare Pages
+- activar `WHATSAPP_PROVIDER=meta` cuando quieras que Cal.com notifique por Meta en vez de Twilio
+
+Callback URL para Meta:
+
+```text
+https://saludneurofuncional.pages.dev/api/webhooks/meta/whatsapp
+```
+
+Verification token:
+
+- lo inventas tu
+- debe coincidir exactamente con `META_WHATSAPP_VERIFY_TOKEN`
+
+Si ya te funciono el `hello_world`, entonces la siguiente configuracion real es:
+
+1. guardar `META_WHATSAPP_ACCESS_TOKEN` en Cloudflare Pages
+2. guardar `META_WHATSAPP_PHONE_NUMBER_ID` en Cloudflare Pages
+3. guardar `META_APP_SECRET` en Cloudflare Pages
+4. guardar `META_WHATSAPP_VERIFY_TOKEN` en Cloudflare Pages
+5. poner `WHATSAPP_PROVIDER=meta`
+6. verificar el webhook en Meta y suscribirte al campo `messages`
+
+## Camino simple para WhatsApp
+
+Si no quieres pagar API todavia, el camino mas simple es:
+
+- dejar `contact.whatsappNumber` con tu numero publico
+- usar los mensajes prellenados del sitio
+- operar respuestas automaticas basicas desde WhatsApp Business App con Greeting, Away Messages y Quick Replies
+
+Eso no reemplaza un bot real, pero si te da una experiencia mucho mejor sin agregar secretos ni costos iniciales.
 
 ## Automatizacion en GitHub
 

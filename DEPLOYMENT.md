@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Publicar la landing en Cloudflare Pages y dejar activa la automatizacion con Cal.com + Twilio para confirmaciones por WhatsApp y respuestas entrantes.
+Publicar la landing en Cloudflare Pages y dejar activa la automatizacion con Cal.com + WhatsApp para confirmaciones y respuestas entrantes.
 
 ## Lo que ya deja listo este repo
 
@@ -11,6 +11,7 @@ Publicar la landing en Cloudflare Pages y dejar activa la automatizacion con Cal
 - Endpoint de salud en `/api/health`.
 - Webhook de Cal.com en `/api/webhooks/calcom`.
 - Webhook de Twilio entrante en `/api/webhooks/twilio/inbound`.
+- Webhook de Meta WhatsApp en `/api/webhooks/meta/whatsapp`.
 - Configuracion publica editable en `site-config.js`.
 - Variables locales de ejemplo en `.dev.vars.example`.
 
@@ -46,6 +47,7 @@ npx wrangler pages deploy dist
 - `https://saludneurofuncional.pages.dev/api/health`
 - `https://saludneurofuncional.pages.dev/api/webhooks/calcom`
 - `https://saludneurofuncional.pages.dev/api/webhooks/twilio/inbound`
+- `https://saludneurofuncional.pages.dev/api/webhooks/meta/whatsapp`
 
 ## Despliegue automatico al mergear a `main`
 
@@ -66,15 +68,22 @@ En `Workers & Pages > tu proyecto > Settings > Variables and Secrets`, agrega:
 
 Variables:
 
+- `WHATSAPP_PROVIDER=twilio`
 - `PUBLIC_SITE_URL=https://saludneurofuncional.pages.dev`
 - `CALCOM_BOOKING_URL=https://cal.com/ramon-pizana`
 - `CLINIC_NAME=Salud Neurofuncional`
 - `CLINIC_TIMEZONE=America/Mexico_City`
 - `CLINIC_LOCATION_LABEL=Consultorio Salud Neurofuncional`
 - `DEFAULT_COUNTRY_DIAL_CODE=+52`
+- `META_WHATSAPP_API_VERSION=v25.0`
+- `META_TEMPLATE_LANGUAGE_CODE=en_US`
 
 Secretos:
 
+- `META_APP_SECRET`
+- `META_WHATSAPP_ACCESS_TOKEN`
+- `META_WHATSAPP_PHONE_NUMBER_ID`
+- `META_WHATSAPP_VERIFY_TOKEN`
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 - `TWILIO_WHATSAPP_FROM` o `TWILIO_MESSAGING_SERVICE_SID`
@@ -82,6 +91,9 @@ Secretos:
 - `TWILIO_CONTENT_SID_BOOKING_CREATED`
 - `TWILIO_CONTENT_SID_BOOKING_RESCHEDULED`
 - `TWILIO_CONTENT_SID_BOOKING_CANCELLED`
+- `META_TEMPLATE_BOOKING_CREATED`
+- `META_TEMPLATE_BOOKING_RESCHEDULED`
+- `META_TEMPLATE_BOOKING_CANCELLED`
 
 Si quieres saber donde encontrar cada valor exacto y en que plataforma debe guardarse, sigue [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md).
 
@@ -130,6 +142,25 @@ Hola {{1}}, tu cita en {{2}} fue cancelada. Si quieres agendar de nuevo, hazlo a
 - `TWILIO_CONTENT_SID_BOOKING_CREATED`
 - `TWILIO_CONTENT_SID_BOOKING_RESCHEDULED`
 - `TWILIO_CONTENT_SID_BOOKING_CANCELLED`
+
+## Configurar Meta WhatsApp Cloud API
+
+Si prefieres Meta directo:
+
+1. Pon `WHATSAPP_PROVIDER=meta`.
+2. Usa este callback URL:
+
+```text
+https://saludneurofuncional.pages.dev/api/webhooks/meta/whatsapp
+```
+
+3. Usa como verify token exactamente el valor de `META_WHATSAPP_VERIFY_TOKEN`.
+4. En Meta suscribete al campo `messages`.
+5. Si quieres notificaciones desde Cal.com por Meta, crea plantillas y guarda:
+   - `META_TEMPLATE_BOOKING_CREATED`
+   - `META_TEMPLATE_BOOKING_RESCHEDULED`
+   - `META_TEMPLATE_BOOKING_CANCELLED`
+6. Ajusta `META_TEMPLATE_LANGUAGE_CODE` al idioma real de tus plantillas aprobadas.
 
 ## Pruebas recomendadas
 

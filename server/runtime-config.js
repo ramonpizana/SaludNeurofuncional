@@ -6,7 +6,10 @@ const DEFAULTS = {
   siteUrl: "https://saludneurofuncional.pages.dev",
   timezone: "America/Mexico_City",
   locationLabel: "Consultorio Salud Neurofuncional",
-  defaultCountryDialCode: "+52"
+  defaultCountryDialCode: "+52",
+  whatsappProvider: "twilio",
+  metaApiVersion: "v25.0",
+  metaTemplateLanguageCode: "en_US"
 };
 
 function normalizeWhatsAppFrom(rawValue, defaultCountryDialCode) {
@@ -38,6 +41,7 @@ export function getRuntimeConfig(env = {}) {
     timezone: cleanText(env.CLINIC_TIMEZONE, DEFAULTS.timezone),
     locationLabel: cleanText(env.CLINIC_LOCATION_LABEL, DEFAULTS.locationLabel),
     defaultCountryDialCode,
+    whatsappProvider: cleanText(env.WHATSAPP_PROVIDER, DEFAULTS.whatsappProvider).toLowerCase(),
     twilio: {
       accountSid: cleanText(env.TWILIO_ACCOUNT_SID),
       authToken: cleanText(env.TWILIO_AUTH_TOKEN),
@@ -47,6 +51,23 @@ export function getRuntimeConfig(env = {}) {
         BOOKING_CREATED: cleanText(env.TWILIO_CONTENT_SID_BOOKING_CREATED),
         BOOKING_RESCHEDULED: cleanText(env.TWILIO_CONTENT_SID_BOOKING_RESCHEDULED),
         BOOKING_CANCELLED: cleanText(env.TWILIO_CONTENT_SID_BOOKING_CANCELLED)
+      }
+    },
+    meta: {
+      appSecret: cleanText(env.META_APP_SECRET),
+      accessToken: cleanText(env.META_WHATSAPP_ACCESS_TOKEN),
+      phoneNumberId: cleanText(env.META_WHATSAPP_PHONE_NUMBER_ID),
+      businessAccountId: cleanText(env.META_WHATSAPP_BUSINESS_ACCOUNT_ID),
+      verifyToken: cleanText(env.META_WHATSAPP_VERIFY_TOKEN),
+      apiVersion: cleanText(env.META_WHATSAPP_API_VERSION, DEFAULTS.metaApiVersion),
+      templateLanguageCode: cleanText(
+        env.META_TEMPLATE_LANGUAGE_CODE,
+        DEFAULTS.metaTemplateLanguageCode
+      ),
+      templateNameByEvent: {
+        BOOKING_CREATED: cleanText(env.META_TEMPLATE_BOOKING_CREATED),
+        BOOKING_RESCHEDULED: cleanText(env.META_TEMPLATE_BOOKING_RESCHEDULED),
+        BOOKING_CANCELLED: cleanText(env.META_TEMPLATE_BOOKING_CANCELLED)
       }
     }
   };

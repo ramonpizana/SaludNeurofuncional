@@ -34,6 +34,7 @@ export function getDomNodes() {
     faqCtaTitle: query("#faq-cta-title"),
     faqCtaHelper: query("#faq-cta-helper"),
     faqCtaLink: query("#faq-whatsapp-link"),
+    faqQuickActions: query("#faq-quick-actions"),
     headerCta: query("#header-cta"),
     primaryCta: query("#primary-cta")
   };

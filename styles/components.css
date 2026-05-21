@@ -232,3 +232,16 @@
   color: var(--muted);
   line-height: 1.75;
 }
+
+.faq-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.faq-action-link {
+  min-height: 2.7rem;
+  padding-inline: 1rem;
+  font-size: 0.95rem;
+}

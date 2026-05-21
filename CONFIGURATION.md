@@ -12,15 +12,22 @@ Usa `Workers & Pages > saludneurofuncional > Settings > Variables and Secrets`.
 
 Variables:
 
+- `WHATSAPP_PROVIDER`
 - `PUBLIC_SITE_URL`
 - `CALCOM_BOOKING_URL`
 - `CLINIC_NAME`
 - `CLINIC_TIMEZONE`
 - `CLINIC_LOCATION_LABEL`
 - `DEFAULT_COUNTRY_DIAL_CODE`
+- `META_WHATSAPP_API_VERSION`
+- `META_TEMPLATE_LANGUAGE_CODE`
 
 Secrets:
 
+- `META_APP_SECRET`
+- `META_WHATSAPP_ACCESS_TOKEN`
+- `META_WHATSAPP_PHONE_NUMBER_ID`
+- `META_WHATSAPP_VERIFY_TOKEN`
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 - `TWILIO_WHATSAPP_FROM`
@@ -29,6 +36,9 @@ Secrets:
 - `TWILIO_CONTENT_SID_BOOKING_CREATED`
 - `TWILIO_CONTENT_SID_BOOKING_RESCHEDULED`
 - `TWILIO_CONTENT_SID_BOOKING_CANCELLED`
+- `META_TEMPLATE_BOOKING_CREATED`
+- `META_TEMPLATE_BOOKING_RESCHEDULED`
+- `META_TEMPLATE_BOOKING_CANCELLED`
 
 ### GitHub
 
@@ -66,6 +76,32 @@ Pasos:
   - Si no quieres exponer un numero publico todavia, dejalo vacio y el boton se oculta.
   - No pongas ahi el numero de Twilio hasta confirmar que ya fue activado como WhatsApp Sender.
 
+### Meta WhatsApp Cloud API
+
+- `META_APP_SECRET`: Meta App > Settings > Basic > App Secret.
+- `META_WHATSAPP_ACCESS_TOKEN`: guarda aqui tu token de acceso; mejor si es permanente o de system user.
+- `META_WHATSAPP_PHONE_NUMBER_ID`: es el identificador del numero que aparece en tu `curl` para enviar mensajes.
+- `META_WHATSAPP_BUSINESS_ACCOUNT_ID`: opcional para referencia operativa; no es necesario para el flujo actual del webhook.
+- `META_WHATSAPP_VERIFY_TOKEN`: lo inventas tu. Debe coincidir con el token escrito al verificar el webhook en Meta.
+- `META_WHATSAPP_API_VERSION`: por ejemplo `v25.0`.
+- `META_TEMPLATE_LANGUAGE_CODE`: por ejemplo `en_US` si sigues usando plantillas de prueba en ingles.
+- `META_TEMPLATE_BOOKING_CREATED`: nombre de la plantilla aprobada para confirmacion.
+- `META_TEMPLATE_BOOKING_RESCHEDULED`: nombre de la plantilla aprobada para reprogramacion.
+- `META_TEMPLATE_BOOKING_CANCELLED`: nombre de la plantilla aprobada para cancelacion.
+
+### Provider activo
+
+- `WHATSAPP_PROVIDER=twilio`: mantiene el flujo actual por Twilio.
+- `WHATSAPP_PROVIDER=meta`: usa Meta Cloud API directo para mensajes de agenda desde Cal.com.
+
+## Que identificador de Meta si necesitas
+
+De los identificadores que sueles ver en Meta:
+
+- `Phone Number ID`: si lo usamos y va en `META_WHATSAPP_PHONE_NUMBER_ID`.
+- `App ID`: no hace falta guardarlo para el runtime del sitio.
+- `Business ID` o `WABA ID`: no hace falta para el flujo actual, salvo referencia operativa.
+
 ### Cal.com
 
 - `CALCOM_BOOKING_URL`: tu URL publica de reserva, por ejemplo `https://cal.com/ramon-pizana`.
@@ -85,6 +121,7 @@ Campos recomendados:
 - `ctaHelper`
 - `ctaLabel`
 - `ctaMessage`
+- `ctaActions`
 - `items`
 
 Cada elemento de `items` debe incluir:
@@ -98,6 +135,25 @@ Reglas:
 - Todo el contenido FAQ debe ser seguro para exponer publicamente.
 - Si `contact.whatsappNumber` esta vacio, la CTA de FAQ se oculta para evitar enlaces rotos.
 - Usa `ctaMessage` solo para texto publico de precontacto; nunca pongas datos sensibles, tokens o informacion clinica privada.
+- `ctaActions` permite crear botones de acceso rapido con mensajes prellenados, por ejemplo para agendar, pedir ubicacion o resolver dudas sobre costos.
+
+## WhatsApp gratis y seguro
+
+Si quieres algo practico sin costo de API:
+
+- usa `contact.whatsappNumber` para abrir un chat directo con `wa.me`
+- personaliza `contact.whatsappDefaultMessage` para el mensaje base
+- usa `faq.ctaActions` para dar varias opciones guiadas sin meter backend
+- en tu telefono, activa en WhatsApp Business las funciones de Greeting, Away Messages y Quick Replies
+
+Eso no es un bot completo, pero si te da:
+
+- contacto directo
+- mensajes predeterminados
+- respuestas rapidas manuales o semiautomaticas
+- cero secretos en el frontend
+
+Si despues quieres un bot real con webhooks y automatizacion, entonces pasas a Meta Cloud API o Twilio.
 
 ## Numero de Twilio y WhatsApp
 
@@ -126,3 +182,26 @@ En Cloudflare Pages:
 1. Primero prueba con sandbox de Twilio.
 2. Cuando el flujo este bien, registra tu numero real como WhatsApp Sender.
 3. Manten las plantillas y secretos solo en Cloudflare Pages.
+
+## Configurar webhook de Meta
+
+Callback URL:
+
+```text
+https://saludneurofuncional.pages.dev/api/webhooks/meta/whatsapp
+```
+
+Verification token:
+
+```text
+META_WHATSAPP_VERIFY_TOKEN
+```
+
+Pasos:
+
+1. En Meta Developers abre tu app.
+2. Ve a `WhatsApp > Configuration`.
+3. Pega el callback URL anterior.
+4. En verify token pega exactamente el valor de `META_WHATSAPP_VERIFY_TOKEN`.
+5. Verifica el webhook.
+6. Suscribete al campo `messages`.
