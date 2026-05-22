@@ -24,6 +24,7 @@ Variables:
 
 Secrets:
 
+- `WHATSAPP_REDIRECT_NUMBER`
 - `META_APP_SECRET`
 - `META_WHATSAPP_ACCESS_TOKEN`
 - `META_WHATSAPP_PHONE_NUMBER_ID`
@@ -62,6 +63,19 @@ Pasos:
 3. Nunca hagas commit de `.dev.vars`.
 
 ## Donde encontrar cada valor
+
+### Gateway de contacto del sitio
+
+- `WHATSAPP_REDIRECT_NUMBER`: el numero real al que quieres redirigir el boton publico del sitio.
+  - Usa formato internacional, por ejemplo `+523311392354`.
+  - Este valor vive solo en Cloudflare Pages.
+  - El frontend puede usar `/api/contact/whatsapp` sin escribir el numero en `site-config.js`.
+
+Importante:
+
+- esto evita dejar el numero duro en el HTML y en el repositorio
+- no vuelve el numero "secreto" a nivel de red, porque el navegador termina abriendo WhatsApp
+- si quieres ocultarlo de verdad incluso al destino final, entonces no debes usar click-to-chat; en ese caso necesitas un formulario y que tu backend inicie el contacto por API con consentimiento del usuario
 
 ### Twilio
 
@@ -133,7 +147,8 @@ Cada elemento de `items` debe incluir:
 Reglas:
 
 - Todo el contenido FAQ debe ser seguro para exponer publicamente.
-- Si `contact.whatsappNumber` esta vacio, la CTA de FAQ se oculta para evitar enlaces rotos.
+- Si usas `contact.whatsappMode = "redirect"`, define `contact.whatsappRedirectPath`, por ejemplo `/api/contact/whatsapp`.
+- Si usas `contact.whatsappMode = "direct"`, deja `contact.whatsappNumber` con el numero publico.
 - Usa `ctaMessage` solo para texto publico de precontacto; nunca pongas datos sensibles, tokens o informacion clinica privada.
 - `ctaActions` permite crear botones de acceso rapido con mensajes prellenados, por ejemplo para agendar, pedir ubicacion o resolver dudas sobre costos.
 
@@ -141,7 +156,7 @@ Reglas:
 
 Si quieres algo practico sin costo de API:
 
-- usa `contact.whatsappNumber` para abrir un chat directo con `wa.me`
+- usa `contact.whatsappMode = "redirect"` y el endpoint `/api/contact/whatsapp`
 - personaliza `contact.whatsappDefaultMessage` para el mensaje base
 - usa `faq.ctaActions` para dar varias opciones guiadas sin meter backend
 - en tu telefono, activa en WhatsApp Business las funciones de Greeting, Away Messages y Quick Replies

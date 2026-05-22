@@ -9,6 +9,7 @@ Publicar la landing en Cloudflare Pages y dejar activa la automatizacion con Cal
 - Build estatico en `dist/`.
 - Configuracion de Cloudflare Pages en `wrangler.jsonc`.
 - Endpoint de salud en `/api/health`.
+- Gateway de contacto en `/api/contact/whatsapp`.
 - Webhook de Cal.com en `/api/webhooks/calcom`.
 - Webhook de Twilio entrante en `/api/webhooks/twilio/inbound`.
 - Webhook de Meta WhatsApp en `/api/webhooks/meta/whatsapp`.
@@ -45,6 +46,7 @@ npx wrangler pages deploy dist
 
 - `https://saludneurofuncional.pages.dev/`
 - `https://saludneurofuncional.pages.dev/api/health`
+- `https://saludneurofuncional.pages.dev/api/contact/whatsapp`
 - `https://saludneurofuncional.pages.dev/api/webhooks/calcom`
 - `https://saludneurofuncional.pages.dev/api/webhooks/twilio/inbound`
 - `https://saludneurofuncional.pages.dev/api/webhooks/meta/whatsapp`
@@ -80,6 +82,7 @@ Variables:
 
 Secretos:
 
+- `WHATSAPP_REDIRECT_NUMBER`
 - `META_APP_SECRET`
 - `META_WHATSAPP_ACCESS_TOKEN`
 - `META_WHATSAPP_PHONE_NUMBER_ID`
@@ -96,6 +99,31 @@ Secretos:
 - `META_TEMPLATE_BOOKING_CANCELLED`
 
 Si quieres saber donde encontrar cada valor exacto y en que plataforma debe guardarse, sigue [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md).
+
+## Activar el boton de WhatsApp sin exponer el numero en el HTML
+
+1. En `site-config.js`, usa:
+
+```js
+contact: {
+  whatsappNumber: "",
+  whatsappMode: "redirect",
+  whatsappRedirectPath: "/api/contact/whatsapp",
+  whatsappDefaultMessage: "Hola, quiero agendar una valoracion en Salud Neurofuncional."
+}
+```
+
+2. En Cloudflare Pages guarda `WHATSAPP_REDIRECT_NUMBER` con el numero real en formato internacional.
+3. Redeploya el sitio.
+4. Prueba el boton de WhatsApp desde la landing.
+
+Para probarlo localmente, usa `wrangler pages dev`. Si abres `index.html` directo o con un servidor estatico simple, la ruta de Functions no estara disponible.
+
+Flujo:
+
+- el frontend abre `/api/contact/whatsapp`
+- Cloudflare Pages Functions arma la URL final de WhatsApp
+- el numero no vive en `site-config.js` ni en el repo
 
 ## Configurar Cal.com
 

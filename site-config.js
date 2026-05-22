@@ -5,6 +5,8 @@ window.SN_SITE_CONFIG = {
   locationLabel: "Consultorio Salud Neurofuncional",
   contact: {
     whatsappNumber: "",
+    whatsappMode: "redirect",
+    whatsappRedirectPath: "/api/contact/whatsapp",
     whatsappDefaultMessage: "Hola, quiero agendar una valoracion en Salud Neurofuncional.",
     email: "",
     phoneDisplay: ""

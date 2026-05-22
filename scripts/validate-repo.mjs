@@ -38,6 +38,7 @@ const requiredFiles = [
   "styles/sections.css",
   "styles/responsive.css",
   "functions/api/health.ts",
+  "functions/api/contact/whatsapp.js",
   "server/formatting.js",
   "server/runtime-config.js",
   "server/calcom.js",
@@ -270,6 +271,7 @@ function validateJavaScript() {
     "server/meta-whatsapp.js",
     "server/request-guards.js",
     "server/twilio.js",
+    "functions/api/contact/whatsapp.js",
     "functions/api/webhooks/calcom.js",
     "functions/api/webhooks/twilio/inbound.js",
     "functions/api/webhooks/meta/whatsapp.js"

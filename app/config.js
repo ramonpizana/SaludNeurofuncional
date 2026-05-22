@@ -140,6 +140,8 @@ export function getSiteConfig() {
   };
   const contact = {
     whatsappNumber: "",
+    whatsappMode: "direct",
+    whatsappRedirectPath: "",
     whatsappDefaultMessage: "Hola, quiero agendar una valoracion.",
     email: "",
     phoneDisplay: "",

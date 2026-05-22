@@ -7,6 +7,7 @@ Landing page base para una fisioterapeuta o terapeuta fisica con:
 - Configuracion publica para migrar despues a una agenda externa.
 - Base lista para publicar en Cloudflare Pages.
 - Webhooks para conectar Cal.com con confirmaciones por WhatsApp usando Twilio o Meta Cloud API.
+- Ruta de contacto `/api/contact/whatsapp` para redirigir a WhatsApp sin dejar el numero duro en el HTML.
 
 ## Archivos principales
 
@@ -32,11 +33,23 @@ Edita `site-config.js` para personalizar:
 
 - nombre y marca
 - direccion o texto del consultorio
-- numero de WhatsApp
+- estrategia de contacto por WhatsApp
 - preguntas frecuentes y copy de la CTA de contacto
 - modo de agenda
 
 Ademas, la FAQ ya soporta acciones rapidas de WhatsApp con mensajes prellenados mediante `faq.ctaActions`.
+
+Si quieres evitar dejar el numero escrito en el frontend, usa:
+
+- `contact.whatsappMode = "redirect"`
+- `contact.whatsappRedirectPath = "/api/contact/whatsapp"`
+
+En ese modo, el boton publico abre una ruta propia del sitio y Cloudflare redirige al chat real usando el secreto `WHATSAPP_REDIRECT_NUMBER`.
+
+Nota:
+
+- esta ruta funciona en Cloudflare Pages y en `wrangler pages dev`
+- si abres `index.html` directo con `file://`, la CTA de WhatsApp por redireccion se ocultara
 
 Modos de agenda soportados:
 
@@ -135,6 +148,7 @@ La integracion actual agrega estos endpoints en Cloudflare Pages Functions:
 - `/api/webhooks/calcom`: recibe `BOOKING_CREATED`, `BOOKING_RESCHEDULED` y `BOOKING_CANCELLED` desde Cal.com y dispara WhatsApp por el proveedor configurado.
 - `/api/webhooks/twilio/inbound`: responde mensajes entrantes de WhatsApp con respuestas automaticas sencillas.
 - `/api/webhooks/meta/whatsapp`: verifica webhook de Meta y responde mensajes entrantes por Cloud API.
+- `/api/contact/whatsapp`: redirige desde la landing a WhatsApp sin exponer el numero en el HTML.
 
 Configuracion recomendada:
 
@@ -144,6 +158,7 @@ Configuracion recomendada:
   - `META_WHATSAPP_ACCESS_TOKEN`
   - `META_WHATSAPP_PHONE_NUMBER_ID`
   - `META_WHATSAPP_VERIFY_TOKEN`
+  - `WHATSAPP_REDIRECT_NUMBER`
   - `TWILIO_ACCOUNT_SID`
   - `TWILIO_AUTH_TOKEN`
   - `TWILIO_WHATSAPP_FROM` o `TWILIO_MESSAGING_SERVICE_SID`
@@ -171,6 +186,7 @@ Puntos importantes:
 - Las confirmaciones salientes de WhatsApp usan plantillas aprobadas de Twilio Content Template Builder.
 - Las respuestas entrantes de Twilio se contestan con TwiML, sin exponer credenciales en el cliente.
 - Si usas `WHATSAPP_PROVIDER=meta`, las confirmaciones de Cal.com salen por Meta Cloud API y el webhook entrante va por `/api/webhooks/meta/whatsapp`.
+- Si usas `contact.whatsappMode = "redirect"`, el numero que abre el chat vive solo en `WHATSAPP_REDIRECT_NUMBER`.
 - La guia paso a paso de donde encontrar cada valor esta en [CONFIGURATION.md](C:/Users/ramon/Documents/EdisonPage/SaludNeurofuncional/CONFIGURATION.md).
 
 ## Meta Cloud API: que conviene hacer
@@ -206,11 +222,11 @@ Si ya te funciono el `hello_world`, entonces la siguiente configuracion real es:
 
 Si no quieres pagar API todavia, el camino mas simple es:
 
-- dejar `contact.whatsappNumber` con tu numero publico
+- dejar `contact.whatsappMode = "redirect"` y guardar `WHATSAPP_REDIRECT_NUMBER` como secreto
 - usar los mensajes prellenados del sitio
 - operar respuestas automaticas basicas desde WhatsApp Business App con Greeting, Away Messages y Quick Replies
 
-Eso no reemplaza un bot real, pero si te da una experiencia mucho mejor sin agregar secretos ni costos iniciales.
+Eso no reemplaza un bot real, pero si te da una experiencia mucho mejor sin dejar el numero duro en el frontend ni agregar costos iniciales.
 
 ## Automatizacion en GitHub
 
