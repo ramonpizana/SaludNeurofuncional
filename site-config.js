@@ -1,7 +1,7 @@
 window.SN_SITE_CONFIG = {
   clinicName: "Salud Neurofuncional",
   shortName: "SN",
-  tagline: "Fisioterapia personalizada",
+  tagline: "Neurorehabilitacion y movimiento funcional",
   locationLabel: "Consultorio Salud Neurofuncional",
   contact: {
     whatsappNumber: "",

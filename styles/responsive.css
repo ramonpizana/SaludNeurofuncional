@@ -2,6 +2,8 @@
   .site-header {
     border-radius: 28px;
     flex-wrap: wrap;
+    position: relative;
+    top: 0;
   }
 
   .site-nav {
@@ -23,6 +25,27 @@
   .hero h1,
   .section-heading h2 {
     max-width: none;
+  }
+
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-panel {
+    padding-top: 0;
+  }
+
+  .hero-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .about-grid .info-card:nth-child(2) {
+    transform: none;
+  }
+
+  .card-grid .service-card:nth-child(n) {
+    grid-column: span 1;
+    min-height: auto;
   }
 
   .faq-cta {
@@ -62,6 +85,14 @@
   .hero-actions,
   .button,
   .scheduler-actions a {
+    width: 100%;
+  }
+
+  .hero-points {
+    gap: 0.65rem;
+  }
+
+  .hero-points li {
     width: 100%;
   }
 
