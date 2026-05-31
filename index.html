@@ -11,12 +11,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
     rel="stylesheet"
   >
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
   <div class="ambient ambient-one"></div>
   <div class="ambient ambient-two"></div>
 
@@ -25,7 +26,7 @@
       <span class="brand-mark" id="brand-mark">SN</span>
       <span>
         <strong id="brand-name">Salud Neurofuncional</strong>
-        <small id="brand-tagline">Fisioterapia personalizada</small>
+        <small id="brand-tagline">Neurorehabilitacion y movimiento funcional</small>
       </span>
     </a>
 
@@ -40,14 +41,14 @@
     <a class="button button-secondary header-button" id="header-cta" href="#agenda">Agendar valoracion</a>
   </header>
 
-  <main>
+  <main id="main-content">
     <section class="hero section" id="inicio">
       <div class="hero-copy">
-        <p class="eyebrow">Fisioterapia neurologica y rehabilitacion funcional</p>
-        <h1>Movimiento con proposito, atencion humana y un plan terapeutico hecho para cada etapa.</h1>
+        <p class="eyebrow">Neurorehabilitacion y recuperacion funcional</p>
+        <h1>Recuperar movimiento con criterio clinico, seguimiento claro y una atencion que se adapta a cada etapa.</h1>
         <p class="lead">
-          Una pagina pensada para presentar la practica profesional, explicar el enfoque clinico y facilitar el agendado
-          de citas de forma clara desde el primer contacto.
+          Presenta la practica profesional con una estructura mas serena y precisa: explica el enfoque, da contexto al
+          proceso terapeutico y deja que la persona entienda rapido si esta atencion puede ayudarle.
         </p>
 
         <div class="hero-actions">
@@ -55,53 +56,70 @@
           <a class="button button-ghost" href="#servicios">Conocer servicios</a>
         </div>
 
+        <div class="hero-meta" aria-label="Detalles del servicio">
+          <article class="hero-meta-card">
+            <span>Valoracion inicial</span>
+            <strong>60 min con exploracion funcional y plan inicial</strong>
+          </article>
+          <article class="hero-meta-card hero-meta-card-soft">
+            <span>Modalidad de atencion</span>
+            <strong>Presencial con seguimiento online cuando el caso lo permite</strong>
+          </article>
+        </div>
+
         <ul class="hero-points">
-          <li>Valoracion inicial integral</li>
+          <li>Atencion 1:1 y objetivos medibles</li>
           <li>Planes de rehabilitacion personalizados</li>
-          <li>Seguimiento funcional y educacion terapeutica</li>
+          <li>Educacion terapeutica y continuidad entre sesiones</li>
         </ul>
       </div>
 
       <aside class="hero-panel" aria-label="Resumen de atencion">
         <article class="panel-card panel-highlight">
           <p class="panel-label">Primera sesion</p>
-          <h2>Valoracion completa de 60 min</h2>
+          <h2>Una evaluacion que aterriza prioridades y define el siguiente paso.</h2>
           <p>
-            Revision del motivo de consulta, objetivos terapeuticos, exploracion funcional y propuesta de tratamiento.
+            Revision del motivo de consulta, objetivos terapeuticos, exploracion funcional y una propuesta de trabajo clara
+            desde la primera visita.
           </p>
+          <ul class="hero-signal-list">
+            <li>Historia breve y hallazgos clave</li>
+            <li>Metas funcionales traducidas a decisiones concretas</li>
+            <li>Ruta terapeutica y frecuencia sugerida segun el caso</li>
+          </ul>
         </article>
 
         <div class="hero-stats">
           <article class="panel-card">
+            <strong>4 pasos</strong>
+            <span>Agenda, evaluacion, plan y seguimiento</span>
+          </article>
+          <article class="panel-card">
             <strong>1:1</strong>
-            <span>Atencion individual</span>
+            <span>Atencion individual con observacion clinica real</span>
           </article>
           <article class="panel-card">
-            <strong>Online + Presencial</strong>
-            <span>Opciones flexibles</span>
-          </article>
-          <article class="panel-card">
-            <strong>Plan funcional</strong>
-            <span>Metas medibles</span>
+            <strong>Flexible</strong>
+            <span>Presencial, consultorio y continuidad online</span>
           </article>
         </div>
       </aside>
     </section>
 
     <section class="trust-strip section">
-      <p>Recuperacion funcional</p>
-      <p>Prevencion de recaidas</p>
-      <p>Reeducacion del movimiento</p>
-      <p>Acompanamiento terapeutico</p>
+      <p>Dolor, movilidad y readaptacion funcional</p>
+      <p>Marcha, equilibrio y control motor</p>
+      <p>Seguimiento con metas observables</p>
+      <p>Educacion terapeutica y continuidad real</p>
     </section>
 
     <section class="section about" id="sobre-mi">
       <div class="section-heading">
         <p class="eyebrow">Presentacion profesional</p>
-        <h2>Un espacio para explicar quien eres, que haces y como acompanas a cada paciente.</h2>
+        <h2>Una pagina mas clara para explicar quien eres, como valoras y que puede esperar cada paciente.</h2>
         <p>
-          Este contenido esta redactado como una base profesional para una terapeuta o fisioterapeuta. Podemos cambiar
-          luego el nombre, experiencia, certificaciones y especialidades concretas de la persona.
+          La idea no es solo verse bien. Tambien ayuda a ordenar el relato clinico, bajar objeciones comunes y dejar un
+          primer contacto mucho mas confiable.
         </p>
       </div>
 
@@ -135,30 +153,30 @@
     <section class="section services" id="servicios">
       <div class="section-heading">
         <p class="eyebrow">Servicios</p>
-        <h2>Una landing clara para contar exactamente en que puede ayudarte esta persona.</h2>
+        <h2>Servicios descritos con mas criterio, menos relleno y mejor jerarquia visual.</h2>
       </div>
 
       <div class="card-grid">
         <article class="service-card">
-          <span class="card-number">01</span>
+          <span class="card-number">Inicio</span>
           <h3>Valoracion inicial</h3>
           <p>Analisis de sintomas, antecedentes, movilidad, funcionalidad y metas terapeuticas para disenar el tratamiento.</p>
         </article>
 
         <article class="service-card">
-          <span class="card-number">02</span>
+          <span class="card-number">Control motor</span>
           <h3>Fisioterapia neurologica</h3>
           <p>Trabajo sobre control motor, equilibrio, coordinacion, marcha y recuperacion de patrones funcionales.</p>
         </article>
 
         <article class="service-card">
-          <span class="card-number">03</span>
+          <span class="card-number">Readaptacion</span>
           <h3>Rehabilitacion musculoesqueletica</h3>
           <p>Atencion a dolor, lesion, limitacion articular y readaptacion progresiva para volver a la actividad.</p>
         </article>
 
         <article class="service-card">
-          <span class="card-number">04</span>
+          <span class="card-number">Continuidad</span>
           <h3>Seguimiento y educacion</h3>
           <p>Plan de ejercicios, recomendaciones y acompanamiento para mantener resultados entre sesiones.</p>
         </article>
@@ -168,7 +186,7 @@
     <section class="section process" id="proceso">
       <div class="section-heading">
         <p class="eyebrow">Proceso de atencion</p>
-        <h2>Asi se puede explicar la experiencia desde el primer contacto hasta el seguimiento.</h2>
+        <h2>La experiencia se entiende mejor cuando el proceso esta explicado sin ambiguedad.</h2>
       </div>
 
       <div class="timeline">
@@ -235,11 +253,10 @@
     <section class="section booking" id="agenda">
       <div class="section-heading">
         <p class="eyebrow">Agenda</p>
-        <h2>Permite reservar una cita y llevarla directamente al calendario.</h2>
+        <h2>Reservar deberia sentirse simple, confiable y coherente con el resto de la experiencia.</h2>
         <p id="booking-section-copy">
-          Esta version abre el evento listo para guardarse en Google Calendar y tambien genera un respaldo `.ics`. Si
-          luego quieres sincronizacion directa con el calendario real del profesional, podemos integrar Google Calendar API
-          o una plataforma de reservas.
+          Esta base ya puede trabajar con agenda externa, redireccion de WhatsApp y una capa posterior de automatizacion.
+          Por ahora prioriza claridad visual, menos friccion y una llamada a la accion que se sienta consistente.
         </p>
       </div>
 
@@ -350,7 +367,7 @@
 
   <footer class="site-footer">
     <p id="footer-brand-name">Salud Neurofuncional</p>
-    <p>Landing base editable para fisioterapia, rehabilitacion y agendado de citas.</p>
+    <p>Landing base para presentar practica clinica, agenda y contacto con una identidad mas cuidada.</p>
   </footer>
 
   <script src="site-config.js"></script>

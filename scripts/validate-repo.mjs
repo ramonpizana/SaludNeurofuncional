@@ -179,7 +179,7 @@ function validateHtml() {
 
   const requiredPatterns = [
     { label: "description meta tag", regex: /<meta\s+name="description"/i },
-    { label: "main landmark", regex: /<main>/i },
+    { label: "main landmark", regex: /<main\b/i },
     { label: "booking form", regex: /<form[^>]*id="appointment-form"/i },
     { label: "stylesheet reference", regex: /href="styles\.css"/i },
     { label: "script reference", regex: /src="script\.js"/i },

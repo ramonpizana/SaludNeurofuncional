@@ -8,11 +8,28 @@ html {
 
 body {
   margin: 0;
-  font-family: "Manrope", sans-serif;
+  font-family: var(--font-body);
   background:
-    radial-gradient(circle at top left, rgba(243, 157, 107, 0.22), transparent 28%),
-    linear-gradient(180deg, #fbf7f0 0%, var(--bg) 100%);
+    radial-gradient(circle at top left, rgba(27, 138, 124, 0.16), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(19, 104, 95, 0.12), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #f8fcfb 0%, var(--bg) 100%);
   color: var(--text);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 1px 1px, rgba(19, 33, 30, 0.035) 1px, transparent 0);
+  background-size: auto, 18px 18px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 90%);
+  z-index: 0;
 }
 
 img {
@@ -31,28 +48,45 @@ textarea {
   font: inherit;
 }
 
+.skip-link {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 5;
+  padding: 0.9rem 1.1rem;
+  border-radius: 999px;
+  background: var(--brand-deep);
+  color: white;
+  transform: translateY(-140%);
+  transition: transform 160ms var(--ease-out);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 .ambient {
   position: fixed;
   inset: auto;
-  width: 28rem;
-  height: 28rem;
+  width: 34rem;
+  height: 34rem;
   border-radius: 999px;
-  filter: blur(70px);
-  opacity: 0.4;
+  filter: blur(85px);
+  opacity: 0.42;
   pointer-events: none;
   z-index: 0;
 }
 
 .ambient-one {
-  top: -7rem;
-  right: -8rem;
-  background: rgba(14, 112, 100, 0.22);
+  top: -9rem;
+  right: -10rem;
+  background: rgba(19, 104, 95, 0.22);
 }
 
 .ambient-two {
-  bottom: 8rem;
-  left: -8rem;
-  background: rgba(243, 157, 107, 0.2);
+  bottom: 5rem;
+  left: -9rem;
+  background: rgba(27, 138, 124, 0.15);
 }
 
 .site-header,
@@ -65,10 +99,11 @@ textarea {
 .eyebrow {
   margin: 0 0 1rem;
   color: var(--brand);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
   font-weight: 800;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
 }
 
 .lead,
@@ -81,4 +116,26 @@ textarea {
 .site-footer p,
 .form-note {
   color: var(--muted);
+}
+
+:where(h1, h2, h3, h4) {
+  text-wrap: balance;
+}
+
+:where(p, li) {
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

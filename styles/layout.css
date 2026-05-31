@@ -1,16 +1,19 @@
 .site-header {
   width: min(calc(100% - 2rem), var(--content-width));
   margin: 1.2rem auto 0;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 999px;
-  background: rgba(255, 250, 244, 0.7);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 10px 40px rgba(18, 34, 31, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  background: rgba(248, 251, 250, 0.72);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft);
+  position: sticky;
+  top: 1rem;
+  z-index: 4;
 }
 
 .brand {
@@ -26,43 +29,55 @@
 }
 
 .brand strong {
-  font-size: 0.98rem;
+  font-size: 1rem;
 }
 
 .brand small {
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
 }
 
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.15rem;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+}
+
+.site-nav a {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  transition:
+    color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out);
 }
 
 .site-nav a:hover {
   color: var(--brand-deep);
+  background: rgba(19, 104, 95, 0.08);
 }
 
 .section {
   width: min(calc(100% - 2rem), var(--content-width));
   margin: 0 auto;
-  padding: 4.5rem 0;
+  padding: 5.5rem 0;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr;
-  gap: 2rem;
-  padding-top: 5rem;
-  align-items: center;
+  grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.92fr);
+  gap: 3rem;
+  padding-top: 5.25rem;
+  align-items: start;
+  min-height: min(84rem, 100dvh - 8rem);
 }
 
 .hero-panel {
   display: grid;
-  gap: 1rem;
+  gap: 1.1rem;
+  padding-top: 1rem;
 }
 
 .hero-stats {
@@ -71,25 +86,32 @@
   gap: 1rem;
 }
 
-.about-grid,
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 1fr;
+  gap: 1.35rem;
+  margin-top: 2rem;
+}
+
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1.2rem;
   margin-top: 2rem;
 }
 
 .timeline {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.2rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   margin-top: 2rem;
+  max-width: 58rem;
 }
 
 .booking-layout {
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
-  gap: 1.4rem;
+  grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
+  gap: 1.6rem;
   margin-top: 2rem;
 }
 
@@ -106,10 +128,11 @@
 
 .site-footer {
   width: min(calc(100% - 2rem), var(--content-width));
-  margin: 0 auto;
-  padding: 0 0 3rem;
+  margin: 1rem auto 0;
+  padding: 2rem 0 3rem;
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   font-size: 0.94rem;
+  border-top: 1px solid rgba(19, 33, 30, 0.08);
 }
